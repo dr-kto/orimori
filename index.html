@@ -1,1 +1,291 @@
-HELLO
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORIMORI - Онигири және Сушибургер</title>
+    <meta name="description" content="ORIMORI - Дәмді онигири және сушибургерлер. Тапсырыс беру үшін байланысыңыз!" />
+    <meta name="author" content="ORIMORI" />
+
+    <meta property="og:title" content="ORIMORI - Онигири және Сушибургер" />
+    <meta property="og:description" content="Дәмді онигири және сушибургерлер. Тапсырыс беру үшін байланысыңыз!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(180deg, hsl(35, 30%, 97%), hsl(35, 30%, 92%));
+        min-height: 100vh;
+        color: hsl(25, 15%, 20%);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Rice grain pattern background */
+      .rice-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+        background-image: 
+          radial-gradient(circle at 20% 30%, hsl(25, 15%, 20%) 1px, transparent 1px),
+          radial-gradient(circle at 60% 70%, hsl(25, 15%, 20%) 1px, transparent 1px),
+          radial-gradient(circle at 80% 20%, hsl(25, 15%, 20%) 1px, transparent 1px);
+        background-size: 40px 40px, 60px 60px, 50px 50px;
+        pointer-events: none;
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        max-width: 42rem;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+      }
+
+      .logo-section {
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.7s ease-out;
+      }
+
+      .logo-card {
+        display: inline-block;
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
+        margin-bottom: 1.5rem;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .logo-card:hover {
+        box-shadow: 0 8px 30px -6px rgba(232, 53, 78, 0.2);
+      }
+
+      .logo-card img {
+        width: 16rem;
+        height: auto;
+        display: block;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        font-size: 1.25rem;
+        color: hsl(25, 10%, 45%);
+        margin-bottom: 0.5rem;
+      }
+
+      .description {
+        font-size: 1rem;
+        color: hsl(25, 10%, 45%);
+      }
+
+      .buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 4rem;
+        animation: fadeInUp 0.7s ease-out 0.2s backwards;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1.5rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 1rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        color: white;
+      }
+
+      .btn-whatsapp {
+        background: #25D366;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+      }
+
+      .btn-whatsapp:hover {
+        background: #20BD5A;
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        transform: scale(1.05);
+      }
+
+      .btn-telegram {
+        background: #0088cc;
+        box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+      }
+
+      .btn-telegram:hover {
+        background: #0077b3;
+        box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
+        transform: scale(1.05);
+      }
+
+      .btn svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .working-hours {
+        text-align: center;
+        animation: fadeIn 1s ease-out 0.5s backwards;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        font-size: 0.875rem;
+        color: hsl(25, 10%, 45%);
+      }
+
+      .pulse-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        background: hsl(355, 85%, 55%);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      /* Decorative circles */
+      .deco-circle-1 {
+        position: absolute;
+        top: 2.5rem;
+        right: 2.5rem;
+        width: 8rem;
+        height: 8rem;
+        background: hsla(355, 85%, 55%, 0.05);
+        border-radius: 50%;
+        filter: blur(3rem);
+        pointer-events: none;
+      }
+
+      .deco-circle-2 {
+        position: absolute;
+        bottom: 5rem;
+        left: 2.5rem;
+        width: 10rem;
+        height: 10rem;
+        background: hsla(355, 85%, 55%, 0.05);
+        border-radius: 50%;
+        filter: blur(3rem);
+        pointer-events: none;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(1rem);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      @media (min-width: 640px) {
+        .buttons-container {
+          flex-direction: row;
+          justify-content: center;
+        }
+
+        .btn {
+          width: auto;
+        }
+
+        h1 {
+          font-size: 3rem;
+        }
+
+        .subtitle {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="rice-pattern"></div>
+    
+    <div class="container">
+      <div class="logo-section">
+        <div class="logo-card">
+          <img src="./orimori-logo.png" alt="ORIMORI - Онигири және Сушибургер" />
+        </div>
+        <h1>Қош келдіңіздер!</h1>
+        <p class="subtitle">Дәмді онигири және сушибургерлер</p>
+        <p class="description">Тапсырыс беру үшін байланысыңыз</p>
+      </div>
+
+      <div class="buttons-container">
+        <a href="https://wa.me/77475305080?text=%D0%A1%D0%B0%D0%BB%D0%B0%D0%BC%D0%B0%D1%82%D1%81%D1%8B%D0%B7%D0%B1%D0%B0%2C%20%D0%9E%D0%BD%D0%B8%D0%B3%D0%B8%D1%80%D0%B8%2F%D0%A1%D1%83%D1%88%D0%B8%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%20%D2%9B%D0%B0%D0%B1%D1%8B%D0%BB%D0%B4%D0%B0%D0%B9%D1%81%D1%8B%D0%B7%D0%B4%D0%B0%D1%80%20%D0%BC%D0%B0%3F" target="_blank" class="btn btn-whatsapp">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          WhatsApp арқылы жазу
+        </a>
+        
+        <a href="https://t.me/OrimoriBot" target="_blank" class="btn btn-telegram">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Telegram арқылы жазу
+        </a>
+      </div>
+
+      <div class="working-hours">
+        <div class="badge">
+          <div class="pulse-dot"></div>
+          <span>Жұмыс уақыты: күн сайын</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="deco-circle-1"></div>
+    <div class="deco-circle-2"></div>
+  </body>
+</html>
