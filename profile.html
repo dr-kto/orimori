@@ -484,8 +484,8 @@
         </div>
       </div>
 
-      <!-- Edit Profile Section -->
-      <div class="card" style="animation-delay: 0.5s;">
+      <!-- Edit Profile Section (only for own profile) -->
+      <div class="card" id="editSection" style="animation-delay: 0.5s;">
         <h3>
           <span class="card-icon">✏️</span>
           Редактировать профиль
@@ -540,12 +540,17 @@
       last_name: '',
       photo_url: '',
       orimori_xp: 0,
-      level: 1,
+      orimori_coins: 0,
+      level: 0,
       display_name: '',
       about_me: '',
       custom_photo: '',
       auth_time: new Date().toISOString()
     };
+
+    // Check if viewing another user's profile
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewingUserId = urlParams.get('id');
 
     // Calculate level from XP
     function calculateLevel(xp) {
@@ -601,7 +606,23 @@
           throw new Error('Telegram user data not available');
         }
 
-        // Prepare user data
+        // If viewing another user's profile, just fetch their data
+        if (viewingUserId) {
+          const fullData = await supabaseRequest(`users?id=eq.${viewingUserId}&select=*`);
+          
+          if (fullData && fullData.length > 0) {
+            userData = {
+              ...userData,
+              ...fullData[0]
+            };
+          } else {
+            throw new Error('User not found');
+          }
+          
+          return userData;
+        }
+
+        // Prepare user data for current user
         const userPayload = {
           id: user.id,
           username: user.username || '',
@@ -612,7 +633,7 @@
         };
 
         // Upsert user data
-        const result = await supabaseRequest(
+        await supabaseRequest(
           `users?id=eq.${user.id}`,
           'POST',
           userPayload
@@ -636,11 +657,13 @@
         console.error('Supabase sync error:', error);
         showToast('❌ Ошибка синхронизации с сервером');
         
-        // Try to load from localStorage
-        const cached = localStorage.getItem('orimori_user_data');
-        if (cached) {
-          userData = JSON.parse(cached);
-          return userData;
+        // Try to load from localStorage only if viewing own profile
+        if (!viewingUserId) {
+          const cached = localStorage.getItem('orimori_user_data');
+          if (cached) {
+            userData = JSON.parse(cached);
+            return userData;
+          }
         }
         
         throw error;
@@ -718,15 +741,20 @@
       const aboutMe = userData.about_me || 'Информация не указана';
       document.getElementById('aboutMeDisplay').textContent = aboutMe;
 
-      // Update edit fields
-      document.getElementById('editDisplayName').value = userData.display_name || '';
-      document.getElementById('editAboutMe').value = userData.about_me || '';
-      
-      if (userData.custom_photo) {
-        document.getElementById('photoPreview').src = userData.custom_photo;
-        document.getElementById('photoPreview').classList.add('visible');
-        document.getElementById('uploadText').style.display = 'none';
-        document.getElementById('photoUploadArea').classList.add('has-image');
+      // Hide edit section if viewing another user's profile
+      if (viewingUserId) {
+        document.getElementById('editSection').style.display = 'none';
+      } else {
+        // Update edit fields
+        document.getElementById('editDisplayName').value = userData.display_name || '';
+        document.getElementById('editAboutMe').value = userData.about_me || '';
+        
+        if (userData.custom_photo) {
+          document.getElementById('photoPreview').src = userData.custom_photo;
+          document.getElementById('photoPreview').classList.add('visible');
+          document.getElementById('uploadText').style.display = 'none';
+          document.getElementById('photoUploadArea').classList.add('has-image');
+        }
       }
     }
 
