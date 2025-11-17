@@ -601,13 +601,6 @@
         </h3>
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-icon">🏆</div>
-            <div class="stat-content">
-              <div class="stat-value" id="statLevel">1</div>
-              <div class="stat-label">Уровень</div>
-            </div>
-          </div>
-          <div class="stat-item">
             <div class="stat-icon">⭐</div>
             <div class="stat-content">
               <div class="stat-value" id="statXP">0</div>
@@ -615,17 +608,17 @@
             </div>
           </div>
           <div class="stat-item">
-            <div class="stat-icon">🔥</div>
-            <div class="stat-content">
-              <div class="stat-value">Высокая</div>
-              <div class="stat-label">Активность</div>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">💎</div>
+            <div class="stat-icon">🟡</div>
             <div class="stat-content">
               <div class="stat-value" id="statCoins">0</div>
               <div class="stat-label">Монеты</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">📍</div>
+            <div class="stat-content">
+              <div class="stat-value" id="statVisits">0</div>
+              <div class="stat-label">Посещено мест</div>
             </div>
           </div>
         </div>
@@ -815,20 +808,25 @@
       return (level + 1) * (level + 1) * 50;
     }
 
-    function getStatusEmoji(level) {
-      if (level < 5) return '🌱';
-      if (level < 10) return '🌿';
-      if (level < 20) return '🌳';
-      if (level < 30) return '⭐';
-      return '👑';
-    }
-
-    function getStatusName(level) {
-      if (level < 5) return 'Новичок';
-      if (level < 10) return 'Активный';
-      if (level < 20) return 'Эксперт';
-      if (level < 30) return 'Мастер';
-      return 'Легенда';
+    function getRankByXP(xp) {
+      const ranks = [
+        { xp: 0, level: 1, emoji: '🌱', name: 'Новичок' },
+        { xp: 50, level: 2, emoji: '🍚', name: 'Ученик Риса' },
+        { xp: 200, level: 3, emoji: '🥢', name: 'Ролл-Воин' },
+        { xp: 500, level: 4, emoji: '🍱', name: 'Мастер Вкусов' },
+        { xp: 1000, level: 5, emoji: '🔱', name: 'Хранитель Соуса' },
+        { xp: 2000, level: 6, emoji: '🛡️', name: 'Защитник Трезубца' }
+      ];
+      
+      let currentRank = ranks[0];
+      for (let i = ranks.length - 1; i >= 0; i--) {
+        if (xp >= ranks[i].xp) {
+          currentRank = ranks[i];
+          break;
+        }
+      }
+      
+      return currentRank;
     }
 
     // Rank Popup Functions
@@ -1002,14 +1000,14 @@
       circle.style.strokeDashoffset = offset;
 
       // Update stats
-      document.getElementById('statLevel').textContent = level;
       document.getElementById('statXP').textContent = userData.orimori_xp;
       document.getElementById('statCoins').textContent = userData.orimori_coins || 0;
+      document.getElementById('statVisits').textContent = userData.visits_count || 0;
 
-      // Update status
-      const statusEmoji = getStatusEmoji(level);
-      const statusName = getStatusName(level);
-      document.getElementById('userStatus').textContent = `${statusEmoji} ${statusName}`;
+      // Update status using rank table
+      const rank = getRankByXP(userData.orimori_xp);
+      document.getElementById('userStatus').textContent = `${rank.emoji} ${rank.name}`;
+      document.getElementById('levelBadge').textContent = `LVL ${rank.level}`;
 
       // Update about me
       const aboutMe = userData.about_me || 'Информация не указана';
