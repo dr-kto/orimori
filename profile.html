@@ -151,6 +151,13 @@
       font-weight: 600;
       font-size: 0.9rem;
       color: hsl(25, 15%, 20%);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .profile-status:hover {
+      background: hsl(35, 30%, 92%);
+      transform: scale(1.05);
     }
 
     .card {
@@ -183,10 +190,11 @@
     .stat-item {
       display: flex;
       align-items: center;
-      padding: 1rem;
+      padding: 0.85rem;
       background: hsl(35, 30%, 97%);
       border-radius: 1rem;
       transition: all 0.3s ease;
+      min-width: 0;
     }
 
     .stat-item:hover {
@@ -195,27 +203,32 @@
     }
 
     .stat-icon {
-      font-size: 2.5rem;
-      margin-right: 1rem;
+      font-size: 2rem;
+      margin-right: 0.75rem;
       flex-shrink: 0;
     }
 
     .stat-content {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
+      overflow: hidden;
     }
 
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: bold;
       color: hsl(350, 75%, 58%);
+      word-break: break-word;
+      line-height: 1.2;
     }
 
     .stat-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: hsl(25, 10%, 45%);
+      white-space: nowrap;
     }
 
     .achievements-grid {
@@ -372,6 +385,155 @@
       opacity: 1;
     }
 
+    /* Rank Popup Styles */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .popup-overlay.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    .popup {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 90%;
+      width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 9999;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.show .popup {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .popup-header h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: hsl(25, 15%, 20%);
+      margin: 0;
+    }
+
+    .popup-close {
+      background: hsl(35, 30%, 95%);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: hsl(25, 15%, 20%);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .popup-close:hover {
+      background: hsl(350, 75%, 58%);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .rank-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.5rem;
+    }
+
+    .rank-table thead th {
+      background: hsl(35, 30%, 97%);
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: hsl(25, 10%, 45%);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rank-table thead th:first-child {
+      border-radius: 0.75rem 0 0 0.75rem;
+    }
+
+    .rank-table thead th:last-child {
+      border-radius: 0 0.75rem 0.75rem 0;
+    }
+
+    .rank-table tbody tr {
+      background: white;
+      transition: all 0.3s ease;
+    }
+
+    .rank-table tbody tr:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(232, 53, 78, 0.1);
+    }
+
+    .rank-table tbody td {
+      padding: 1rem 0.75rem;
+      font-size: 0.9rem;
+      color: hsl(25, 15%, 20%);
+      background: hsl(35, 30%, 98%);
+      border-top: 1px solid hsl(35, 30%, 94%);
+      border-bottom: 1px solid hsl(35, 30%, 94%);
+    }
+
+    .rank-table tbody td:first-child {
+      border-left: 1px solid hsl(35, 30%, 94%);
+      border-radius: 0.75rem 0 0 0.75rem;
+      font-weight: 600;
+      color: hsl(350, 75%, 58%);
+    }
+
+    .rank-table tbody td:last-child {
+      border-right: 1px solid hsl(35, 30%, 94%);
+      border-radius: 0 0.75rem 0.75rem 0;
+    }
+
+    .rank-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rank-emoji {
+      font-size: 1.25rem;
+    }
+
+    .mythic-rank {
+      background: linear-gradient(135deg, hsl(280, 70%, 65%), hsl(320, 70%, 60%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: bold;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -380,6 +542,26 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .rank-table {
+        font-size: 0.85rem;
+      }
+
+      .rank-table thead th,
+      .rank-table tbody td {
+        padding: 0.6rem 0.5rem;
+      }
+
+      .popup {
+        padding: 1.5rem;
+        width: 95%;
+      }
+
+      .popup-header h3 {
+        font-size: 1.25rem;
       }
     }
   </style>
@@ -525,6 +707,62 @@
 
   <div id="toast" class="toast"></div>
 
+  <!-- Rank Popup -->
+  <div id="rankPopup" class="popup-overlay">
+    <div class="popup">
+      <div class="popup-header">
+        <h3>🏆 Таблица званий</h3>
+        <button class="popup-close" onclick="closeRankPopup()">✕</button>
+      </div>
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th>XP</th>
+            <th>Level</th>
+            <th>Rank</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0</td>
+            <td>1</td>
+            <td><span class="rank-name"><span class="rank-emoji">🌱</span> Новичок</span></td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>2</td>
+            <td><span class="rank-name"><span class="rank-emoji">🍚</span> Ученик Риса</span></td>
+          </tr>
+          <tr>
+            <td>200</td>
+            <td>3</td>
+            <td><span class="rank-name"><span class="rank-emoji">🥢</span> Ролл-Воин</span></td>
+          </tr>
+          <tr>
+            <td>500</td>
+            <td>4</td>
+            <td><span class="rank-name"><span class="rank-emoji">🍱</span> Мастер Вкусов</span></td>
+          </tr>
+          <tr>
+            <td>1000</td>
+            <td>5</td>
+            <td><span class="rank-name"><span class="rank-emoji">🔱</span> Хранитель Соуса</span></td>
+          </tr>
+          <tr>
+            <td>2000</td>
+            <td>6</td>
+            <td><span class="rank-name"><span class="rank-emoji">🛡️</span> Защитник Трезубца</span></td>
+          </tr>
+          <tr>
+            <td>top-10</td>
+            <td>7</td>
+            <td><span class="rank-name mythic-rank"><span class="rank-emoji">👑</span> Бог Вкусов (мифический)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
@@ -592,6 +830,35 @@
       if (level < 30) return 'Мастер';
       return 'Легенда';
     }
+
+    // Rank Popup Functions
+    function openRankPopup() {
+      const popup = document.getElementById('rankPopup');
+      popup.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRankPopup() {
+      const popup = document.getElementById('rankPopup');
+      popup.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // Close popup when clicking overlay
+    document.addEventListener('DOMContentLoaded', () => {
+      const popup = document.getElementById('rankPopup');
+      popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+          closeRankPopup();
+        }
+      });
+
+      // Add click handler to user status
+      const userStatus = document.getElementById('userStatus');
+      if (userStatus) {
+        userStatus.addEventListener('click', openRankPopup);
+      }
+    });
 
     // Supabase API request
     async function supabaseRequest(endpoint, method = 'GET', body = null) {
