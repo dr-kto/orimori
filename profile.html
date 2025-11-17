@@ -6,7 +6,6 @@
   <title>Orimori - Профиль</title>
   <meta name="description" content="Orimori пайдаланушы профилі" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
     * {
@@ -140,73 +139,58 @@
       color: hsl(25, 15%, 20%);
       padding: 0.4rem 1rem;
       border-radius: 1rem;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: bold;
       box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
     }
 
-    .profile-info {
-      margin-top: 1rem;
-    }
-
     .profile-info h2 {
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
     .profile-username {
       color: hsl(350, 75%, 58%);
-      font-weight: 600;
+      font-size: 0.9rem;
       margin-bottom: 0.5rem;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .profile-username a {
-      color: hsl(350, 75%, 58%);
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .profile-username a:hover {
-      opacity: 0.8;
     }
 
     .profile-status {
-      color: hsl(25, 10%, 45%);
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .profile-status:hover {
-      color: hsl(350, 75%, 58%);
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: linear-gradient(135deg, hsl(120, 40%, 95%), hsl(120, 40%, 90%));
+      color: hsl(120, 40%, 35%);
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
     }
 
     .card {
       background: white;
-      border-radius: 1.25rem;
+      border-radius: 1.5rem;
       padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 2px 12px -2px rgba(60, 45, 40, 0.06);
+      box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
+      margin-bottom: 1rem;
       animation: fadeInUp 0.7s ease-out backwards;
     }
 
     .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
     }
 
     .card-icon {
-      font-size: 1.3rem;
+      width: 24px;
+      height: 24px;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
 
@@ -227,6 +211,74 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: hsl(350, 75%, 58%);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: hsl(25, 15%, 30%);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid hsl(35, 20%, 90%);
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: hsl(350, 75%, 58%);
+      box-shadow: 0 0 0 3px rgba(232, 53, 78, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .photo-upload-area {
+      border: 2px dashed hsl(35, 20%, 85%);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .photo-upload-area:hover {
+      border-color: hsl(350, 75%, 58%);
+      background: hsl(350, 75%, 98%);
+    }
+
+    .photo-upload-area.has-image {
+      border-style: solid;
+      padding: 1rem;
+    }
+
+    .photo-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 0.5rem;
+      display: none;
+    }
+
+    .photo-preview.visible {
+      display: block;
     }
 
     .btn {
@@ -268,6 +320,35 @@
       border-color: hsl(350, 75%, 58%);
     }
 
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 1rem;
+    }
+
+    .achievement {
+      text-align: center;
+      padding: 1rem;
+      background: hsl(35, 30%, 98%);
+      border-radius: 1rem;
+      opacity: 0.4;
+    }
+
+    .achievement.unlocked {
+      opacity: 1;
+      background: linear-gradient(135deg, hsl(45, 90%, 95%), hsl(45, 90%, 90%));
+    }
+
+    .achievement-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .achievement-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
     .hidden {
       display: none;
     }
@@ -297,88 +378,6 @@
       opacity: 1;
     }
 
-    /* Popup Styles */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .popup-overlay.show {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .popup {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      max-width: 90%;
-      width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      animation: slideUp 0.3s ease;
-    }
-
-    .popup h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      color: hsl(25, 15%, 20%);
-    }
-
-    .popup-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: hsl(25, 10%, 45%);
-      transition: color 0.2s;
-    }
-
-    .popup-close:hover {
-      color: hsl(350, 75%, 58%);
-    }
-
-    .ranks-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .ranks-table th,
-    .ranks-table td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid hsl(35, 20%, 90%);
-    }
-
-    .ranks-table th {
-      background: hsl(35, 30%, 98%);
-      font-weight: 600;
-      color: hsl(25, 15%, 20%);
-    }
-
-    .ranks-table tr:hover {
-      background: hsl(35, 30%, 98%);
-    }
-
-    .ranks-table td:first-child {
-      font-weight: 600;
-      color: hsl(350, 75%, 58%);
-    }
-
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -390,24 +389,8 @@
       }
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .edit-mode-toggle {
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -428,13 +411,13 @@
             <circle class="progress-ring-circle progress-ring-fill" cx="90" cy="90" r="82" id="progressCircle" />
           </svg>
           <img id="profilePhoto" class="profile-photo" src="" alt="Profile Photo" />
-          <div class="xp-badge" id="xpBadge">⭐ 0 XP</div>
-          <div class="level-badge" id="levelBadge">🔰 LVL 1</div>
+          <div class="xp-badge" id="xpBadge">0 XP</div>
+          <div class="level-badge" id="levelBadge">LVL 1</div>
         </div>
         <div class="profile-info">
           <h2 id="displayName">User</h2>
-          <div class="profile-username" id="username"></div>
-          <div class="profile-status" id="userStatus" onclick="openRankPopup()">🌱 Новичок</div>
+          <div class="profile-username" id="username">@username</div>
+          <div class="profile-status" id="userStatus">🌱 Новичок</div>
         </div>
       </div>
 
@@ -446,302 +429,404 @@
         </h3>
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-label">🔰 Уровень</div>
+            <div class="stat-label">Уровень</div>
             <div class="stat-value" id="statLevel">1</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">⭐ Orimori XP</div>
+            <div class="stat-label">Orimori XP</div>
             <div class="stat-value" id="statXP">0</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">🏅 Ранг</div>
-            <div class="stat-value" id="statRank">-</div>
+            <div class="stat-label">Активность</div>
+            <div class="stat-value">Высокая</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">💰 Монеты</div>
+            <div class="stat-label">Монеты</div>
             <div class="stat-value" id="statCoins">0</div>
           </div>
         </div>
       </div>
 
-      <!-- Ranking Button -->
+      <!-- About Me Section -->
       <div class="card" style="animation-delay: 0.3s;">
-        <a href="ranking.html" class="btn btn-primary" style="text-decoration: none;">
-          🏆 Перейти в рейтинг
-        </a>
+        <h3>
+          <span class="card-icon">💬</span>
+          О себе
+        </h3>
+        <p id="aboutMeDisplay" style="color: hsl(25, 10%, 45%); font-size: 0.95rem; line-height: 1.6;">
+          Информация не указана
+        </p>
+      </div>
+
+      <!-- Achievements Section -->
+      <div class="card" style="animation-delay: 0.4s;">
+        <h3>
+          <span class="card-icon">🏆</span>
+          Достижения
+        </h3>
+        <div class="achievements-grid">
+          <div class="achievement unlocked">
+            <div class="achievement-icon">🎯</div>
+            <div class="achievement-name">Первый шаг</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">⭐</div>
+            <div class="achievement-name">Звезда</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">🔥</div>
+            <div class="achievement-name">В огне</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">💎</div>
+            <div class="achievement-name">Алмаз</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Profile Section (only for own profile) -->
+      <div class="card" id="editSection" style="animation-delay: 0.5s;">
+        <h3>
+          <span class="card-icon">✏️</span>
+          Редактировать профиль
+        </h3>
+        
+        <div class="form-group">
+          <label>Отображаемое имя</label>
+          <input type="text" id="editDisplayName" placeholder="Введите имя" />
+        </div>
+
+        <div class="form-group">
+          <label>О себе</label>
+          <textarea id="editAboutMe" placeholder="Расскажите о себе..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Фотография профиля</label>
+          <div class="photo-upload-area" id="photoUploadArea">
+            <img id="photoPreview" class="photo-preview" src="" alt="Preview" />
+            <div id="uploadText">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">Загрузить фото</div>
+              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Нажмите для выбора</div>
+            </div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display: none;" />
+        </div>
+
+        <button class="btn btn-primary" id="saveProfileBtn">
+          💾 Сохранить изменения
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Rank Popup -->
-  <div class="popup-overlay" id="rankPopup">
-    <div class="popup">
-      <h3>🏅 Таблица званий</h3>
-      <table class="ranks-table">
-        <thead>
-          <tr>
-            <th>XP</th>
-            <th>Level</th>
-            <th>Rank</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>0</td>
-            <td>1</td>
-            <td>Новичок</td>
-          </tr>
-          <tr>
-            <td>50</td>
-            <td>2</td>
-            <td>Ученик Риса</td>
-          </tr>
-          <tr>
-            <td>200</td>
-            <td>3</td>
-            <td>Ролл-Воин</td>
-          </tr>
-          <tr>
-            <td>500</td>
-            <td>4</td>
-            <td>Мастер Вкусов</td>
-          </tr>
-          <tr>
-            <td>1000</td>
-            <td>5</td>
-            <td>Хранитель Соуса</td>
-          </tr>
-          <tr>
-            <td>2000</td>
-            <td>6</td>
-            <td>Защитник Трезубца</td>
-          </tr>
-          <tr>
-            <td>top-10</td>
-            <td>7</td>
-            <td>Бог Вкусов (мифический ранг)</td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="btn btn-secondary" onclick="closeRankPopup()" style="margin-top: 1.5rem;">Закрыть</button>
-    </div>
-  </div>
+  <div id="toast" class="toast"></div>
 
   <script>
-    const tg = Telegram.WebApp;
+    const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
+
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
 
-    const supabaseUrl = 'https://xszscrxhqkqhajbvhqjv.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzendjcnhocWtxaGFqYnZocWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcwNDU5NzMsImV4cCI6MjA1MjYyMTk3M30.bJW0bQBYFFr-pnCl2UHHrj75MqAW5oKtRrmlcRWMdyY';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    // User data storage
+    let userData = {
+      id: null,
+      username: '',
+      first_name: '',
+      last_name: '',
+      photo_url: '',
+      orimori_xp: 0,
+      orimori_coins: 0,
+      level: 0,
+      display_name: '',
+      about_me: '',
+      custom_photo: '',
+      auth_time: new Date().toISOString()
+    };
 
-    let currentUser = null;
+    // Check if viewing another user's profile
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewingUserId = urlParams.get('id');
 
-    // Get user ID from URL or Telegram
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlId = urlParams.get('id');
-      
-      if (urlId) {
-        return urlId;
-      }
-      
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        return tg.initDataUnsafe.user.id.toString();
-      }
-      
-      return null;
+    // Calculate level from XP
+    function calculateLevel(xp) {
+      return Math.floor(Math.sqrt(xp / 50));
     }
 
-    // Fetch user from Supabase
-    async function fetchUserData(userId) {
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', userId)
-          .single();
+    // Calculate XP needed for next level
+    function calculateNextLevelXP(level) {
+      return Math.pow(level + 1, 2) * 50;
+    }
 
-        if (error) {
-          console.error('Error fetching user:', error);
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Supabase API call
+    async function supabaseRequest(endpoint, method = 'GET', body = null) {
+      const options = {
+        method,
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        }
+      };
+
+      if (body) {
+        options.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, options);
+      
+      if (!response.ok) {
+        throw new Error(`Supabase error: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    // Send user data to Supabase and get extended data
+    async function syncWithSupabase() {
+      try {
+        const user = tg.initDataUnsafe.user;
+        
+        if (!user) {
+          throw new Error('Telegram user data not available');
+        }
+
+        // If viewing another user's profile, just fetch their data
+        if (viewingUserId) {
+          const fullData = await supabaseRequest(`users?id=eq.${viewingUserId}&select=*`);
           
-          // Create new user if not found
-          if (error.code === 'PGRST116') {
-            return await createNewUser(userId);
+          if (fullData && fullData.length > 0) {
+            userData = {
+              ...userData,
+              ...fullData[0]
+            };
+          } else {
+            throw new Error('User not found');
           }
           
-          return null;
+          return userData;
         }
 
-        return data;
-      } catch (err) {
-        console.error('Error:', err);
-        return null;
+        // Prepare user data for current user
+        const userPayload = {
+          id: user.id,
+          username: user.username || '',
+          first_name: user.first_name || '',
+          last_name: user.last_name || '',
+          photo_url: user.photo_url || '',
+          auth_time: new Date().toISOString()
+        };
+
+        // Upsert user data
+        await supabaseRequest(
+          `users?id=eq.${user.id}`,
+          'POST',
+          userPayload
+        );
+
+        // Fetch full user data
+        const fullData = await supabaseRequest(`users?id=eq.${user.id}&select=*`);
+        
+        if (fullData && fullData.length > 0) {
+          userData = {
+            ...userData,
+            ...fullData[0]
+          };
+        }
+
+        // Save to localStorage
+        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+        
+        return userData;
+      } catch (error) {
+        console.error('Supabase sync error:', error);
+        showToast('❌ Ошибка синхронизации с сервером');
+        
+        // Try to load from localStorage only if viewing own profile
+        if (!viewingUserId) {
+          const cached = localStorage.getItem('orimori_user_data');
+          if (cached) {
+            userData = JSON.parse(cached);
+            return userData;
+          }
+        }
+        
+        throw error;
       }
     }
 
-    // Create new user
-    async function createNewUser(userId) {
-      const tgUser = tg.initDataUnsafe.user;
-      
-      const newUser = {
-        id: userId,
-        username: tgUser?.username || null,
-        first_name: tgUser?.first_name || 'User',
-        last_name: tgUser?.last_name || '',
-        xp: 0,
-        level: 1,
-        coins: 0,
-        photo_url: null
-      };
-
+    // Update profile in Supabase
+    async function updateProfile(updates) {
       try {
-        const { data, error } = await supabase
-          .from('users')
-          .insert([newUser])
-          .select()
-          .single();
+        await supabaseRequest(
+          `users?id=eq.${userData.id}`,
+          'PATCH',
+          updates
+        );
 
-        if (error) {
-          console.error('Error creating user:', error);
-          return null;
-        }
-
-        return data;
-      } catch (err) {
-        console.error('Error:', err);
-        return null;
+        // Update local data
+        userData = { ...userData, ...updates };
+        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+        
+        showToast('✅ Профиль обновлен');
+        return true;
+      } catch (error) {
+        console.error('Profile update error:', error);
+        showToast('❌ Ошибка обновления профиля');
+        return false;
       }
     }
 
-    // Get rank based on XP and level
-    function getRank(xp, level) {
-      if (level >= 7) return 'Бог Вкусов';
-      if (xp >= 2000) return 'Защитник Трезубца';
-      if (xp >= 1000) return 'Хранитель Соуса';
-      if (xp >= 500) return 'Мастер Вкусов';
-      if (xp >= 200) return 'Ролл-Воин';
-      if (xp >= 50) return 'Ученик Риса';
-      return 'Новичок';
-    }
+    // Update UI with user data
+    function updateUI() {
+      const level = calculateLevel(userData.orimori_xp);
+      const nextLevelXP = calculateNextLevelXP(level);
+      const currentLevelXP = level * level * 50;
+      const xpProgress = userData.orimori_xp - currentLevelXP;
+      const xpNeeded = nextLevelXP - currentLevelXP;
+      const progressPercent = (xpProgress / xpNeeded) * 100;
 
-    // Get rank emoji
-    function getRankEmoji(rank) {
-      const emojiMap = {
-        'Новичок': '🌱',
-        'Ученик Риса': '🍚',
-        'Ролл-Воин': '🥋',
-        'Мастер Вкусов': '👨‍🍳',
-        'Хранитель Соуса': '🏮',
-        'Защитник Трезубца': '🔱',
-        'Бог Вкусов': '⚡'
-      };
-      return emojiMap[rank] || '🌱';
-    }
-
-    // Display user data
-    function displayUser(user) {
-      const xp = user.xp || 0;
-      const level = user.level || 1;
-      const coins = user.coins || 0;
-      const rank = getRank(xp, level);
-      const rankEmoji = getRankEmoji(rank);
-
-      // Profile photo
-      const photoUrl = user.photo_url || 'https://via.placeholder.com/180';
+      // Update profile photo
+      const photoUrl = userData.custom_photo || userData.photo_url || 'https://via.placeholder.com/156';
       document.getElementById('profilePhoto').src = photoUrl;
 
-      // Display name
-      const displayName = user.first_name || user.username || 'User';
+      // Update display name
+      const displayName = userData.display_name || userData.first_name || 'User';
       document.getElementById('displayName').textContent = displayName;
 
-      // Username with clickable link
-      const usernameEl = document.getElementById('username');
-      if (user.username) {
-        usernameEl.innerHTML = `<a href="https://t.me/${user.username}" target="_blank">@${user.username}</a>`;
-      } else {
-        usernameEl.textContent = '';
-      }
+      // Update username
+      const username = userData.username ? `@${userData.username}` : `ID: ${userData.id}`;
+      document.getElementById('username').textContent = username;
 
-      // Status
-      document.getElementById('userStatus').textContent = `${rankEmoji} ${rank}`;
+      // Update XP and Level badges
+      document.getElementById('xpBadge').textContent = `${userData.orimori_xp} XP`;
+      document.getElementById('levelBadge').textContent = `LVL ${level}`;
 
-      // Badges
-      document.getElementById('xpBadge').textContent = `⭐ ${xp} XP`;
-      document.getElementById('levelBadge').textContent = `🔰 LVL ${level}`;
-
-      // Stats
-      document.getElementById('statLevel').textContent = level;
-      document.getElementById('statXP').textContent = xp;
-      document.getElementById('statRank').textContent = rank;
-      document.getElementById('statCoins').textContent = coins;
-
-      // Progress ring
-      const maxXP = getMaxXPForLevel(level);
-      const progress = (xp % maxXP) / maxXP;
-      updateProgressRing(progress);
-
-      // Show content
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('profileContent').classList.remove('hidden');
-    }
-
-    // Get max XP for level
-    function getMaxXPForLevel(level) {
-      const xpThresholds = [0, 50, 200, 500, 1000, 2000, 5000];
-      if (level >= xpThresholds.length) return 5000;
-      return xpThresholds[level];
-    }
-
-    // Update progress ring
-    function updateProgressRing(progress) {
+      // Update progress ring
       const circle = document.getElementById('progressCircle');
       const radius = 82;
       const circumference = 2 * Math.PI * radius;
-      const offset = circumference - (progress * circumference);
-      
+      const offset = circumference - (progressPercent / 100) * circumference;
       circle.style.strokeDasharray = `${circumference} ${circumference}`;
       circle.style.strokeDashoffset = offset;
-    }
 
-    // Open rank popup
-    function openRankPopup() {
-      document.getElementById('rankPopup').classList.add('show');
-    }
+      // Update stats
+      document.getElementById('statLevel').textContent = level;
+      document.getElementById('statXP').textContent = userData.orimori_xp;
+      document.getElementById('statCoins').textContent = userData.orimori_coins || 0;
 
-    // Close rank popup
-    function closeRankPopup() {
-      document.getElementById('rankPopup').classList.remove('show');
-    }
+      // Update status based on level
+      let status = '🌱 Новичок';
+      if (level >= 10) status = '🌟 Эксперт';
+      else if (level >= 5) status = '🔥 Активный';
+      else if (level >= 2) status = '✨ Растущий';
+      document.getElementById('userStatus').textContent = status;
 
-    // Close popup when clicking overlay
-    document.getElementById('rankPopup').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeRankPopup();
+      // Update about me
+      const aboutMe = userData.about_me || 'Информация не указана';
+      document.getElementById('aboutMeDisplay').textContent = aboutMe;
+
+      // Hide edit section if viewing another user's profile
+      if (viewingUserId) {
+        document.getElementById('editSection').style.display = 'none';
+      } else {
+        // Update edit fields
+        document.getElementById('editDisplayName').value = userData.display_name || '';
+        document.getElementById('editAboutMe').value = userData.about_me || '';
+        
+        if (userData.custom_photo) {
+          document.getElementById('photoPreview').src = userData.custom_photo;
+          document.getElementById('photoPreview').classList.add('visible');
+          document.getElementById('uploadText').style.display = 'none';
+          document.getElementById('photoUploadArea').classList.add('has-image');
+        }
       }
+    }
+
+    // Handle photo upload
+    document.getElementById('photoUploadArea').addEventListener('click', () => {
+      document.getElementById('photoInput').click();
     });
 
-    // Load user data on page load
-    async function init() {
-      const userId = getUserId();
+    document.getElementById('photoInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target.result;
+        document.getElementById('photoPreview').src = base64;
+        document.getElementById('photoPreview').classList.add('visible');
+        document.getElementById('uploadText').style.display = 'none';
+        document.getElementById('photoUploadArea').classList.add('has-image');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Handle profile save
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+      const displayName = document.getElementById('editDisplayName').value.trim();
+      const aboutMe = document.getElementById('editAboutMe').value.trim();
+      const photoPreview = document.getElementById('photoPreview');
+      const customPhoto = photoPreview.classList.contains('visible') ? photoPreview.src : null;
+
+      const updates = {};
       
-      if (!userId) {
-        console.error('No user ID found');
-        document.getElementById('loading').innerHTML = '<p>Ошибка: пользователь не найден</p>';
+      if (displayName) updates.display_name = displayName;
+      if (aboutMe) updates.about_me = aboutMe;
+      if (customPhoto && customPhoto.startsWith('data:')) updates.custom_photo = customPhoto;
+
+      if (Object.keys(updates).length === 0) {
+        showToast('⚠️ Нет изменений для сохранения');
         return;
       }
 
-      const userData = await fetchUserData(userId);
-      
-      if (userData) {
-        currentUser = userData;
-        displayUser(userData);
-      } else {
-        document.getElementById('loading').innerHTML = '<p>Ошибка загрузки данных</p>';
+      const success = await updateProfile(updates);
+      if (success) {
+        updateUI();
+      }
+    });
+
+    // Initialize app
+    async function init() {
+      try {
+        // Show loading
+        document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('profileContent').classList.add('hidden');
+
+        // Sync with Supabase
+        await syncWithSupabase();
+
+        // Update UI
+        updateUI();
+
+        // Hide loading, show content
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('profileContent').classList.remove('hidden');
+
+        showToast('✅ Профиль загружен');
+      } catch (error) {
+        console.error('Initialization error:', error);
+        document.getElementById('loading').innerHTML = '<p style="color: hsl(350, 75%, 58%);">❌ Ошибка загрузки профиля</p>';
       }
     }
 
+    // Start the app
     init();
   </script>
 </body>
