@@ -107,11 +107,20 @@
       border: 4px solid white;
     }
 
-    .xp-text {
-      font-size: 0.95rem;
+    .xp-capsule {
+      position: absolute;
+      background: white;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
       font-weight: 700;
-      fill: hsl(350, 75%, 58%);
-      letter-spacing: 0.5px;
+      color: hsl(350, 75%, 58%);
+      box-shadow: 0 2px 8px rgba(232, 53, 78, 0.25), 0 0 0 2px hsl(350, 75%, 58%);
+      white-space: nowrap;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: all 0.5s ease;
+      z-index: 10;
     }
 
     .profile-info h2 {
@@ -721,17 +730,10 @@
       <div class="profile-hero">
         <div class="profile-photo-container">
           <svg class="progress-ring" width="180" height="180">
-            <defs>
-              <path id="circlePath" d="M 90,8 A 82,82 0 1,1 89.99,8" />
-            </defs>
             <circle class="progress-ring-circle progress-ring-bg" cx="90" cy="90" r="82" />
             <circle class="progress-ring-circle progress-ring-fill" cx="90" cy="90" r="82" id="progressCircle" />
-            <text class="xp-text">
-              <textPath id="xpBadge" href="#circlePath" startOffset="50%" text-anchor="middle">
-                0 XP
-              </textPath>
-            </text>
           </svg>
+          <div class="xp-capsule" id="xpCapsule">0 XP</div>
           <img id="profilePhoto" class="profile-photo" src="" alt="Profile Photo" />
         </div>
         <div class="profile-info">
@@ -1191,8 +1193,8 @@
         usernameEl.onclick = null;
       }
 
-      // Update XP badge (now as textPath)
-      document.getElementById('xpBadge').textContent = `${userData.orimori_xp} XP`;
+      // Update XP capsule content
+      document.getElementById('xpCapsule').textContent = `${userData.orimori_xp} XP`;
 
       // Update progress ring
       const circle = document.getElementById('progressCircle');
@@ -1201,6 +1203,22 @@
       const offset = circumference - (progressPercent / 100) * circumference;
       circle.style.strokeDasharray = `${circumference} ${circumference}`;
       circle.style.strokeDashoffset = offset;
+
+      // Position XP capsule at the end of the progress arc
+      const capsule = document.getElementById('xpCapsule');
+      const centerX = 90;
+      const centerY = 90;
+      
+      // Calculate angle: progress starts at top (-90deg), goes clockwise
+      const progressAngle = (progressPercent / 100) * 360 - 90;
+      const angleInRadians = (progressAngle * Math.PI) / 180;
+      
+      // Calculate position on the circle
+      const capsuleX = centerX + radius * Math.cos(angleInRadians);
+      const capsuleY = centerY + radius * Math.sin(angleInRadians);
+      
+      capsule.style.left = `${capsuleX}px`;
+      capsule.style.top = `${capsuleY}px`;
 
       // Update stats
       document.getElementById('statXP').textContent = userData.orimori_xp;
