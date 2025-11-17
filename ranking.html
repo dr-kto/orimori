@@ -347,6 +347,13 @@
         const user = tg.initDataUnsafe.user;
         
         if (!user) {
+          console.warn('Telegram user data not available');
+          // Try to load from localStorage
+          const cached = localStorage.getItem('orimori_user_data');
+          if (cached) {
+            currentUser = JSON.parse(cached);
+            return currentUser;
+          }
           throw new Error('Telegram user data not available');
         }
 
@@ -359,22 +366,33 @@
           auth_time: new Date().toISOString()
         };
 
+        // Upsert user data
         await supabaseRequest(
           `users?id=eq.${user.id}`,
           'POST',
           userPayload
         );
 
+        // Fetch full user data
         const fullData = await supabaseRequest(`users?id=eq.${user.id}&select=*`);
         
         if (fullData && fullData.length > 0) {
           currentUser = fullData[0];
+          // Save to localStorage
+          localStorage.setItem('orimori_user_data', JSON.stringify(currentUser));
+        } else {
+          console.warn('No user data returned from Supabase');
         }
 
         return currentUser;
       } catch (error) {
         console.error('User sync error:', error);
-        return null;
+        // Try localStorage as fallback
+        const cached = localStorage.getItem('orimori_user_data');
+        if (cached) {
+          currentUser = JSON.parse(cached);
+        }
+        return currentUser;
       }
     }
 
@@ -433,20 +451,33 @@
 
     // Update "My Rank" section
     function updateMyRank(players, type) {
-      if (!currentUser) return;
+      if (!currentUser) {
+        console.warn('Current user not available for rank display');
+        document.getElementById('myRankPosition').textContent = '#—';
+        document.getElementById('myRankName').textContent = 'Загрузка...';
+        document.getElementById('myRankUsername').textContent = '';
+        document.getElementById('myRankValue').textContent = '—';
+        return;
+      }
 
       const myIndex = players.findIndex(p => p.id === currentUser.id);
-      const myRank = myIndex >= 0 ? myIndex + 1 : '—';
+      let myRank = myIndex >= 0 ? myIndex + 1 : null;
+      
+      // If not in top 100, calculate approximate rank
+      if (myRank === null) {
+        myRank = '100+';
+      }
+      
       const value = type === 'coins' ? (currentUser.orimori_coins || 0) : (currentUser.orimori_xp || 0);
       const displayName = currentUser.display_name || currentUser.first_name || 'User';
       const username = currentUser.username ? `@${currentUser.username}` : `ID: ${currentUser.id}`;
       const photoUrl = currentUser.custom_photo || currentUser.photo_url || 'https://via.placeholder.com/45';
 
-      document.getElementById('myRankPosition').textContent = myRank === '—' ? '#—' : `#${myRank}`;
+      document.getElementById('myRankPosition').textContent = typeof myRank === 'number' ? `#${myRank}` : `#${myRank}`;
       document.getElementById('myRankAvatar').src = photoUrl;
       document.getElementById('myRankName').textContent = displayName;
       document.getElementById('myRankUsername').textContent = username;
-      document.getElementById('myRankValue').textContent = typeof value === 'number' ? value.toLocaleString() : '—';
+      document.getElementById('myRankValue').textContent = typeof value === 'number' ? value.toLocaleString() : '0';
     }
 
     // Handle tab switching
@@ -483,8 +514,13 @@
         document.getElementById('loading').classList.remove('hidden');
         document.getElementById('leaderboard').classList.add('hidden');
 
-        // Sync current user
+        // Sync current user first
         await syncCurrentUser();
+
+        // Even if sync fails, continue loading leaderboard
+        if (!currentUser) {
+          console.warn('Failed to sync user, but continuing with leaderboard');
+        }
 
         // Fetch initial leaderboard (coins)
         allPlayers = await fetchLeaderboard('coins');

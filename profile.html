@@ -484,8 +484,80 @@
         </div>
       </div>
 
+      <!-- Inventory Section -->
+      <div class="card" style="animation-delay: 0.45s;">
+        <h3>
+          <span class="card-icon">🎒</span>
+          Инвентарь
+        </h3>
+        <div class="achievements-grid" id="inventoryGrid">
+          <div class="achievement unlocked">
+            <div class="achievement-icon">🍚</div>
+            <div class="achievement-name">Рис</div>
+          </div>
+          <div class="achievement unlocked">
+            <div class="achievement-icon">🐟</div>
+            <div class="achievement-name">Рыба</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">🥒</div>
+            <div class="achievement-name">Огурец</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">🥑</div>
+            <div class="achievement-name">Авокадо</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Locations Section -->
+      <div class="card" style="animation-delay: 0.5s;">
+        <h3>
+          <span class="card-icon">🗺️</span>
+          Открытые локации
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; padding: 0.75rem; background: hsl(35, 30%, 97%); border-radius: 0.75rem;">
+            <span style="font-size: 1.5rem; margin-right: 0.75rem;">🏠</span>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">Домашняя кухня</div>
+              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Базовая локация</div>
+            </div>
+            <div style="color: hsl(140, 70%, 45%); font-weight: 600;">✓</div>
+          </div>
+          <div style="display: flex; align-items: center; padding: 0.75rem; background: hsl(35, 30%, 97%); border-radius: 0.75rem; opacity: 0.5;">
+            <span style="font-size: 1.5rem; margin-right: 0.75rem;">🏪</span>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">Суши-бар</div>
+              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Требуется: LVL 3</div>
+            </div>
+            <div style="color: hsl(25, 10%, 45%); font-weight: 600;">🔒</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story Progress Section -->
+      <div class="card" style="animation-delay: 0.55s;">
+        <h3>
+          <span class="card-icon">📖</span>
+          Прогресс по сюжету
+        </h3>
+        <div style="margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="font-weight: 600;">Глава 1: Начало пути</span>
+            <span style="color: hsl(25, 10%, 45%); font-size: 0.9rem;" id="storyProgressPercent">0%</span>
+          </div>
+          <div style="width: 100%; height: 8px; background: hsl(35, 20%, 90%); border-radius: 1rem; overflow: hidden;">
+            <div id="storyProgressBar" style="height: 100%; background: linear-gradient(90deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%)); width: 0%; transition: width 0.5s ease;"></div>
+          </div>
+        </div>
+        <p style="color: hsl(25, 10%, 45%); font-size: 0.95rem; line-height: 1.6;">
+          Вы только начинаете свой путь в мире Orimori. Изучите основы приготовления роллов и откройте новые рецепты!
+        </p>
+      </div>
+
       <!-- Edit Profile Section (only for own profile) -->
-      <div class="card" id="editSection" style="animation-delay: 0.5s;">
+      <div class="card" id="editSection" style="animation-delay: 0.6s;">
         <h3>
           <span class="card-icon">✏️</span>
           Редактировать профиль
@@ -545,7 +617,10 @@
       display_name: '',
       about_me: '',
       custom_photo: '',
-      auth_time: new Date().toISOString()
+      auth_time: new Date().toISOString(),
+      inventory: [],
+      unlocked_locations: [],
+      story_progress: 0
     };
 
     // Check if viewing another user's profile
@@ -560,6 +635,18 @@
     // Calculate XP needed for next level
     function calculateNextLevelXP(level) {
       return Math.pow(level + 1, 2) * 50;
+    }
+
+    // Get rank title based on level and XP
+    function getRankTitle(level, xp, isTopPlayer = false) {
+      if (isTopPlayer) return '🏆 Бог Вкусов';
+      
+      if (level >= 6 || xp >= 2000) return '⚔️ Защитник Трезубца';
+      if (level >= 5 || xp >= 1000) return '🍯 Хранитель Соуса';
+      if (level >= 4 || xp >= 500) return '👨‍🍳 Мастер Вкусов';
+      if (level >= 3 || xp >= 200) return '🍙 Ролл-Воин';
+      if (level >= 2 || xp >= 50) return '📚 Ученик Риса';
+      return '🌱 Новичок';
     }
 
     // Show toast notification
@@ -600,12 +687,6 @@
     // Send user data to Supabase and get extended data
     async function syncWithSupabase() {
       try {
-        const user = tg.initDataUnsafe.user;
-        
-        if (!user) {
-          throw new Error('Telegram user data not available');
-        }
-
         // If viewing another user's profile, just fetch their data
         if (viewingUserId) {
           const fullData = await supabaseRequest(`users?id=eq.${viewingUserId}&select=*`);
@@ -615,11 +696,36 @@
               ...userData,
               ...fullData[0]
             };
+            return userData;
           } else {
+            // User not found
+            showToast('❌ Пользователь не найден');
+            document.body.innerHTML = `
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">😕</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Пользователь не найден</h2>
+                <p style="color: hsl(25, 10%, 45%); margin-bottom: 2rem;">ID ${viewingUserId} не существует в системе</p>
+                <a href="profile.html" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%)); color: white; text-decoration: none; border-radius: 0.75rem; font-weight: 600;">Вернуться к своему профилю</a>
+              </div>
+            `;
             throw new Error('User not found');
           }
-          
-          return userData;
+        }
+
+        // For own profile: load from localStorage first, then sync with Telegram and Supabase
+        const cached = localStorage.getItem('orimori_user_data');
+        if (cached) {
+          userData = { ...userData, ...JSON.parse(cached) };
+        }
+
+        const user = tg.initDataUnsafe.user;
+        
+        if (!user) {
+          // If no Telegram data but have localStorage, use that
+          if (cached) {
+            return userData;
+          }
+          throw new Error('Telegram user data not available');
         }
 
         // Prepare user data for current user
@@ -639,7 +745,7 @@
           userPayload
         );
 
-        // Fetch full user data
+        // Fetch full user data from Supabase
         const fullData = await supabaseRequest(`users?id=eq.${user.id}&select=*`);
         
         if (fullData && fullData.length > 0) {
@@ -647,25 +753,28 @@
             ...userData,
             ...fullData[0]
           };
+          
+          // Save updated data to localStorage
+          localStorage.setItem('orimori_user_data', JSON.stringify(userData));
         }
 
-        // Save to localStorage
-        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
-        
         return userData;
       } catch (error) {
         console.error('Supabase sync error:', error);
-        showToast('❌ Ошибка синхронизации с сервером');
         
         // Try to load from localStorage only if viewing own profile
         if (!viewingUserId) {
           const cached = localStorage.getItem('orimori_user_data');
           if (cached) {
             userData = JSON.parse(cached);
+            showToast('⚠️ Работаем в офлайн режиме');
             return userData;
           }
         }
         
+        if (error.message !== 'User not found') {
+          showToast('❌ Ошибка синхронизации с сервером');
+        }
         throw error;
       }
     }
@@ -730,16 +839,18 @@
       document.getElementById('statXP').textContent = userData.orimori_xp;
       document.getElementById('statCoins').textContent = userData.orimori_coins || 0;
 
-      // Update status based on level
-      let status = '🌱 Новичок';
-      if (level >= 10) status = '🌟 Эксперт';
-      else if (level >= 5) status = '🔥 Активный';
-      else if (level >= 2) status = '✨ Растущий';
-      document.getElementById('userStatus').textContent = status;
+      // Update status with rank title
+      const rankTitle = getRankTitle(level, userData.orimori_xp, false);
+      document.getElementById('userStatus').textContent = rankTitle;
 
       // Update about me
       const aboutMe = userData.about_me || 'Информация не указана';
       document.getElementById('aboutMeDisplay').textContent = aboutMe;
+
+      // Update story progress
+      const storyProgress = userData.story_progress || 0;
+      document.getElementById('storyProgressPercent').textContent = `${storyProgress}%`;
+      document.getElementById('storyProgressBar').style.width = `${storyProgress}%`;
 
       // Hide edit section if viewing another user's profile
       if (viewingUserId) {
