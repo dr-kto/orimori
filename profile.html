@@ -139,7 +139,7 @@
       color: hsl(25, 15%, 20%);
       padding: 0.4rem 1rem;
       border-radius: 1rem;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: bold;
       box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
     }
@@ -150,20 +150,32 @@
     }
 
     .profile-username {
-      color: hsl(350, 75%, 58%);
       font-size: 0.9rem;
+      color: hsl(25, 10%, 45%);
       margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .profile-username:hover {
+      color: hsl(350, 75%, 58%);
+      text-decoration: underline;
     }
 
     .profile-status {
       display: inline-block;
-      padding: 0.4rem 1rem;
-      background: linear-gradient(135deg, hsl(120, 40%, 95%), hsl(120, 40%, 90%));
-      color: hsl(120, 40%, 35%);
+      background: linear-gradient(135deg, hsl(35, 30%, 98%), hsl(35, 30%, 95%));
+      padding: 0.5rem 1rem;
       border-radius: 0.75rem;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin-top: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .profile-status:hover {
+      background: linear-gradient(135deg, hsl(350, 75%, 98%), hsl(350, 75%, 95%));
+      transform: translateY(-2px);
     }
 
     .card {
@@ -171,26 +183,25 @@
       border-radius: 1.5rem;
       padding: 1.5rem;
       box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       animation: fadeInUp 0.7s ease-out backwards;
     }
 
     .card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      font-size: 1.1rem;
     }
 
     .card-icon {
-      width: 24px;
-      height: 24px;
+      font-size: 1.3rem;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }
 
@@ -205,12 +216,38 @@
       font-size: 0.8rem;
       color: hsl(25, 10%, 45%);
       margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
     }
 
     .stat-value {
       font-size: 1.5rem;
       font-weight: bold;
       color: hsl(350, 75%, 58%);
+    }
+
+    .ranking-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .ranking-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(232, 53, 78, 0.35);
     }
 
     .form-group {
@@ -349,32 +386,60 @@
       font-weight: 600;
     }
 
-    .hidden {
-      display: none;
+    .story-progress-container {
+      margin-top: 1rem;
+    }
+
+    .story-progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .story-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: hsl(35, 20%, 90%);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .story-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
+      border-radius: 4px;
+      transition: width 0.5s ease;
     }
 
     .loading {
       text-align: center;
-      padding: 2rem;
+      padding: 4rem 2rem;
+      font-size: 1.1rem;
       color: hsl(25, 10%, 45%);
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .toast {
       position: fixed;
       bottom: 2rem;
       left: 50%;
-      transform: translateX(-50%);
-      background: hsl(25, 15%, 20%);
-      color: white;
+      transform: translateX(-50%) translateY(100px);
+      background: white;
       padding: 1rem 1.5rem;
       border-radius: 0.75rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      font-weight: 600;
       z-index: 1000;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .toast.show {
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
 
@@ -389,14 +454,116 @@
       }
     }
 
-    .edit-mode-toggle {
-      margin-top: 1rem;
+    /* Popup styles */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .popup-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-content {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .popup-overlay.show .popup-content {
+      transform: scale(1);
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .popup-header h3 {
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .popup-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: hsl(35, 30%, 95%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .popup-close:hover {
+      background: hsl(350, 75%, 58%);
+      color: white;
+    }
+
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rank-table th,
+    .rank-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid hsl(35, 20%, 90%);
+    }
+
+    .rank-table th {
+      background: linear-gradient(135deg, hsl(35, 30%, 98%), hsl(35, 30%, 95%));
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: hsl(25, 15%, 30%);
+    }
+
+    .rank-table td {
+      font-size: 0.9rem;
+    }
+
+    .rank-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rank-mythic {
+      background: linear-gradient(135deg, hsl(45, 90%, 95%), hsl(45, 90%, 90%));
+      font-weight: 600;
+    }
+
+    .rank-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   </style>
 </head>
 <body>
   <div class="rice-pattern"></div>
-  
   <div class="container">
     <div id="loading" class="loading">
       <p>Загрузка профиля...</p>
@@ -416,8 +583,8 @@
         </div>
         <div class="profile-info">
           <h2 id="displayName">User</h2>
-          <div class="profile-username" id="username">@username</div>
-          <div class="profile-status" id="userStatus">🌱 Новичок</div>
+          <div class="profile-username" id="username" onclick="openTelegramChat()">@username</div>
+          <div class="profile-status" id="userStatus" onclick="showRankPopup()">🌱 Новичок</div>
         </div>
       </div>
 
@@ -429,19 +596,20 @@
         </h3>
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-label">Уровень</div>
+            <div class="stat-label">⭐ Уровень</div>
             <div class="stat-value" id="statLevel">1</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">Orimori XP</div>
+            <div class="stat-label">✨ Orimori XP</div>
             <div class="stat-value" id="statXP">0</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">Активность</div>
-            <div class="stat-value">Высокая</div>
+            <button class="ranking-button" onclick="window.location.href='ranking.html'">
+              🏆 Рейтинг
+            </button>
           </div>
           <div class="stat-item">
-            <div class="stat-label">Монеты</div>
+            <div class="stat-label">💰 Монеты</div>
             <div class="stat-value" id="statCoins">0</div>
           </div>
         </div>
@@ -500,81 +668,48 @@
             <div class="achievement-name">Рыба</div>
           </div>
           <div class="achievement">
-            <div class="achievement-icon">🥒</div>
-            <div class="achievement-name">Огурец</div>
-          </div>
-          <div class="achievement">
-            <div class="achievement-icon">🥑</div>
-            <div class="achievement-name">Авокадо</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Locations Section -->
-      <div class="card" style="animation-delay: 0.5s;">
-        <h3>
-          <span class="card-icon">🗺️</span>
-          Открытые локации
-        </h3>
-        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          <div style="display: flex; align-items: center; padding: 0.75rem; background: hsl(35, 30%, 97%); border-radius: 0.75rem;">
-            <span style="font-size: 1.5rem; margin-right: 0.75rem;">🏠</span>
-            <div style="flex: 1;">
-              <div style="font-weight: 600; margin-bottom: 0.25rem;">Домашняя кухня</div>
-              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Базовая локация</div>
-            </div>
-            <div style="color: hsl(140, 70%, 45%); font-weight: 600;">✓</div>
-          </div>
-          <div style="display: flex; align-items: center; padding: 0.75rem; background: hsl(35, 30%, 97%); border-radius: 0.75rem; opacity: 0.5;">
-            <span style="font-size: 1.5rem; margin-right: 0.75rem;">🏪</span>
-            <div style="flex: 1;">
-              <div style="font-weight: 600; margin-bottom: 0.25rem;">Суши-бар</div>
-              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Требуется: LVL 3</div>
-            </div>
-            <div style="color: hsl(25, 10%, 45%); font-weight: 600;">🔒</div>
+            <div class="achievement-icon">🥢</div>
+            <div class="achievement-name">Палочки</div>
           </div>
         </div>
       </div>
 
       <!-- Story Progress Section -->
-      <div class="card" style="animation-delay: 0.55s;">
+      <div class="card" style="animation-delay: 0.5s;">
         <h3>
           <span class="card-icon">📖</span>
-          Прогресс по сюжету
+          История
         </h3>
-        <div style="margin-bottom: 1rem;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <span style="font-weight: 600;">Глава 1: Начало пути</span>
-            <span style="color: hsl(25, 10%, 45%); font-size: 0.9rem;" id="storyProgressPercent">0%</span>
+        <div class="story-progress-container">
+          <div class="story-progress-label">
+            <span>Прогресс истории</span>
+            <span id="storyProgressPercent">0%</span>
           </div>
-          <div style="width: 100%; height: 8px; background: hsl(35, 20%, 90%); border-radius: 1rem; overflow: hidden;">
-            <div id="storyProgressBar" style="height: 100%; background: linear-gradient(90deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%)); width: 0%; transition: width 0.5s ease;"></div>
+          <div class="story-progress-bar">
+            <div class="story-progress-fill" id="storyProgressBar" style="width: 0%"></div>
           </div>
         </div>
-        <p style="color: hsl(25, 10%, 45%); font-size: 0.95rem; line-height: 1.6;">
-          Вы только начинаете свой путь в мире Orimori. Изучите основы приготовления роллов и откройте новые рецепты!
-        </p>
       </div>
 
-      <!-- Edit Profile Section (only for own profile) -->
-      <div class="card" id="editSection" style="animation-delay: 0.6s;">
+      <!-- Edit Profile Section (Only for own profile) -->
+      <div id="editSection" class="card" style="animation-delay: 0.55s;">
         <h3>
           <span class="card-icon">✏️</span>
           Редактировать профиль
         </h3>
-        
+
         <div class="form-group">
-          <label>Отображаемое имя</label>
-          <input type="text" id="editDisplayName" placeholder="Введите имя" />
+          <label for="editDisplayName">Отображаемое имя</label>
+          <input type="text" id="editDisplayName" placeholder="Ваше имя" />
         </div>
 
         <div class="form-group">
-          <label>О себе</label>
+          <label for="editAboutMe">О себе</label>
           <textarea id="editAboutMe" placeholder="Расскажите о себе..."></textarea>
         </div>
 
         <div class="form-group">
-          <label>Фотография профиля</label>
+          <label>Фото профиля</label>
           <div class="photo-upload-area" id="photoUploadArea">
             <img id="photoPreview" class="photo-preview" src="" alt="Preview" />
             <div id="uploadText">
@@ -594,6 +729,62 @@
   </div>
 
   <div id="toast" class="toast"></div>
+
+  <!-- Rank Popup -->
+  <div id="rankPopup" class="popup-overlay" onclick="closeRankPopup(event)">
+    <div class="popup-content" onclick="event.stopPropagation()">
+      <div class="popup-header">
+        <h3>🏆 Система рангов</h3>
+        <button class="popup-close" onclick="closeRankPopup()">×</button>
+      </div>
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th>XP</th>
+            <th>Уровень</th>
+            <th>Звание</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0</td>
+            <td>1</td>
+            <td><div class="rank-title">🌱 Новичок</div></td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>2</td>
+            <td><div class="rank-title">📚 Ученик Риса</div></td>
+          </tr>
+          <tr>
+            <td>200</td>
+            <td>3</td>
+            <td><div class="rank-title">🍙 Ролл-Воин</div></td>
+          </tr>
+          <tr>
+            <td>500</td>
+            <td>4</td>
+            <td><div class="rank-title">👨‍🍳 Мастер Вкусов</div></td>
+          </tr>
+          <tr>
+            <td>1000</td>
+            <td>5</td>
+            <td><div class="rank-title">🍯 Хранитель Соуса</div></td>
+          </tr>
+          <tr>
+            <td>2000</td>
+            <td>6</td>
+            <td><div class="rank-title">⚔️ Защитник Трезубца</div></td>
+          </tr>
+          <tr class="rank-mythic">
+            <td>top-10</td>
+            <td>7</td>
+            <td><div class="rank-title">🏆 <strong>Бог Вкусов</strong> (мифический ранг)</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <script>
     const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
@@ -626,6 +817,27 @@
     // Check if viewing another user's profile
     const urlParams = new URLSearchParams(window.location.search);
     const viewingUserId = urlParams.get('id');
+
+    // Open Telegram chat function
+    function openTelegramChat() {
+      if (userData.username) {
+        window.open(`https://t.me/${userData.username}`, '_blank');
+      } else {
+        showToast('❌ У пользователя нет username');
+      }
+    }
+
+    // Show rank popup
+    function showRankPopup() {
+      document.getElementById('rankPopup').classList.add('show');
+    }
+
+    // Close rank popup
+    function closeRankPopup(event) {
+      if (!event || event.target.id === 'rankPopup') {
+        document.getElementById('rankPopup').classList.remove('show');
+      }
+    }
 
     // Calculate level from XP
     function calculateLevel(xp) {
@@ -712,20 +924,27 @@
           }
         }
 
-        // For own profile: load from localStorage first, then sync with Telegram and Supabase
-        const cached = localStorage.getItem('orimori_user_data');
-        if (cached) {
-          userData = { ...userData, ...JSON.parse(cached) };
-        }
-
-        const user = tg.initDataUnsafe.user;
+        // For own profile: Try to get current user ID from Telegram
+        const user = tg.initDataUnsafe?.user;
         
-        if (!user) {
-          // If no Telegram data but have localStorage, use that
+        if (!user || !user.id) {
+          // Fallback: Try to load from localStorage
+          const cached = localStorage.getItem('orimori_user_data');
           if (cached) {
-            return userData;
+            const cachedData = JSON.parse(cached);
+            if (cachedData.id) {
+              // Load own profile from cache
+              const fullData = await supabaseRequest(`users?id=eq.${cachedData.id}&select=*`);
+              if (fullData && fullData.length > 0) {
+                userData = {
+                  ...userData,
+                  ...fullData[0]
+                };
+                return userData;
+              }
+            }
           }
-          throw new Error('Telegram user data not available');
+          throw new Error('Cannot determine user ID');
         }
 
         // Prepare user data for current user
@@ -754,33 +973,26 @@
             ...fullData[0]
           };
           
-          // Save updated data to localStorage
+          // Save to localStorage
           localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+          
+          return userData;
         }
 
         return userData;
       } catch (error) {
         console.error('Supabase sync error:', error);
-        
-        // Try to load from localStorage only if viewing own profile
-        if (!viewingUserId) {
-          const cached = localStorage.getItem('orimori_user_data');
-          if (cached) {
-            userData = JSON.parse(cached);
-            showToast('⚠️ Работаем в офлайн режиме');
-            return userData;
-          }
-        }
-        
-        if (error.message !== 'User not found') {
-          showToast('❌ Ошибка синхронизации с сервером');
-        }
         throw error;
       }
     }
 
-    // Update profile in Supabase
+    // Update profile data
     async function updateProfile(updates) {
+      if (!userData.id) {
+        showToast('❌ User ID not available');
+        return false;
+      }
+
       try {
         await supabaseRequest(
           `users?id=eq.${userData.id}`,
@@ -788,8 +1000,10 @@
           updates
         );
 
-        // Update local data
+        // Update local userData
         userData = { ...userData, ...updates };
+        
+        // Update localStorage
         localStorage.setItem('orimori_user_data', JSON.stringify(userData));
         
         showToast('✅ Профиль обновлен');
