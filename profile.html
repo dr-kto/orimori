@@ -141,158 +141,212 @@
       border-radius: 1rem;
       font-size: 0.75rem;
       font-weight: bold;
-      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+      box-shadow: 0 4px 12px rgba(245, 185, 50, 0.3);
     }
 
-    .profile-info h2 {
+    .profile-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .display-name {
       font-size: 1.5rem;
+      font-weight: bold;
       margin-bottom: 0.25rem;
     }
 
-    .profile-username {
+    .username {
       font-size: 0.9rem;
       color: hsl(25, 10%, 45%);
       margin-bottom: 0.5rem;
       cursor: pointer;
-      transition: color 0.3s ease;
+      transition: color 0.2s;
     }
 
-    .profile-username:hover {
+    .username.clickable {
       color: hsl(350, 75%, 58%);
       text-decoration: underline;
     }
 
-    .profile-status {
+    .username.clickable:hover {
+      color: hsl(350, 75%, 48%);
+    }
+
+    .user-status {
       display: inline-block;
-      background: linear-gradient(135deg, hsl(35, 30%, 98%), hsl(35, 30%, 95%));
-      padding: 0.5rem 1rem;
-      border-radius: 0.75rem;
-      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+      background: linear-gradient(135deg, hsl(350, 75%, 96%), hsl(350, 75%, 92%));
+      color: hsl(350, 75%, 48%);
+      border-radius: 1rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .profile-status:hover {
-      background: linear-gradient(135deg, hsl(350, 75%, 98%), hsl(350, 75%, 95%));
-      transform: translateY(-2px);
-    }
-
-    .card {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
-      margin-bottom: 1.5rem;
-      animation: fadeInUp 0.7s ease-out backwards;
-    }
-
-    .card h3 {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-      font-size: 1.1rem;
-    }
-
-    .card-icon {
-      font-size: 1.3rem;
+      margin-bottom: 1rem;
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .stat-item {
-      text-align: center;
+    .stat-card {
+      background: linear-gradient(135deg, hsl(35, 20%, 97%), hsl(35, 20%, 94%));
       padding: 1rem;
-      background: linear-gradient(135deg, hsl(35, 30%, 98%), hsl(35, 30%, 95%));
       border-radius: 1rem;
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
     }
 
     .stat-label {
       font-size: 0.8rem;
       color: hsl(25, 10%, 45%);
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-    }
-
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: hsl(350, 75%, 58%);
     }
 
     .ranking-button {
       width: 100%;
-      padding: 0.75rem;
+      padding: 1rem;
       background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
       color: white;
       border: none;
-      border-radius: 0.75rem;
-      font-size: 0.9rem;
+      border-radius: 1rem;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.3);
+      text-decoration: none;
+      display: block;
+      text-align: center;
     }
 
     .ranking-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(232, 53, 78, 0.35);
+      box-shadow: 0 6px 16px rgba(232, 53, 78, 0.4);
+    }
+
+    .ranking-button:active {
+      transform: translateY(0);
+    }
+
+    .about-section {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.7s ease-out 0.2s backwards;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .about-text {
+      color: hsl(25, 10%, 35%);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .progress-section {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.7s ease-out 0.3s backwards;
+    }
+
+    .progress-bar-container {
+      background: hsl(35, 20%, 90%);
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
+      border-radius: 12px;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .edit-section {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
+      animation: fadeInUp 0.7s ease-out 0.4s backwards;
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
 
-    .form-group label {
+    .form-label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
       font-size: 0.9rem;
-      color: hsl(25, 15%, 30%);
     }
 
-    .form-group input,
-    .form-group textarea {
+    .form-input,
+    .form-textarea {
       width: 100%;
       padding: 0.75rem;
       border: 2px solid hsl(35, 20%, 90%);
       border-radius: 0.75rem;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
       font-family: inherit;
-      transition: all 0.3s ease;
-      background: white;
     }
 
-    .form-group input:focus,
-    .form-group textarea:focus {
+    .form-input:focus,
+    .form-textarea:focus {
       outline: none;
       border-color: hsl(350, 75%, 58%);
-      box-shadow: 0 0 0 3px rgba(232, 53, 78, 0.1);
     }
 
-    .form-group textarea {
+    .form-textarea {
       resize: vertical;
       min-height: 100px;
     }
 
     .photo-upload-area {
+      width: 100%;
+      height: 200px;
       border: 2px dashed hsl(35, 20%, 85%);
       border-radius: 1rem;
-      padding: 2rem;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     .photo-upload-area:hover {
@@ -302,15 +356,19 @@
 
     .photo-upload-area.has-image {
       border-style: solid;
-      padding: 1rem;
+      border-color: hsl(350, 75%, 58%);
+    }
+
+    .upload-text {
+      color: hsl(25, 10%, 45%);
+      font-size: 0.9rem;
+      text-align: center;
     }
 
     .photo-preview {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 0.5rem;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       display: none;
     }
 
@@ -318,109 +376,41 @@
       display: block;
     }
 
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.85rem 1.75rem;
-      font-size: 0.95rem;
-      font-weight: 600;
+      flex: 1;
+      padding: 0.875rem;
       border: none;
       border-radius: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-      font-family: inherit;
-      width: 100%;
+      transition: all 0.3s ease;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
       color: white;
-      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.25);
+      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.3);
     }
 
     .btn-primary:hover {
-      box-shadow: 0 6px 16px rgba(232, 53, 78, 0.35);
       transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(232, 53, 78, 0.4);
     }
 
     .btn-secondary {
-      background: hsl(35, 30%, 95%);
-      color: hsl(25, 15%, 20%);
-      border: 2px solid hsl(35, 20%, 85%);
+      background: hsl(35, 20%, 90%);
+      color: hsl(25, 15%, 30%);
     }
 
     .btn-secondary:hover {
-      background: hsl(35, 30%, 92%);
-      border-color: hsl(350, 75%, 58%);
-    }
-
-    .achievements-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 1rem;
-    }
-
-    .achievement {
-      text-align: center;
-      padding: 1rem;
-      background: hsl(35, 30%, 98%);
-      border-radius: 1rem;
-      opacity: 0.4;
-    }
-
-    .achievement.unlocked {
-      opacity: 1;
-      background: linear-gradient(135deg, hsl(45, 90%, 95%), hsl(45, 90%, 90%));
-    }
-
-    .achievement-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .achievement-name {
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .story-progress-container {
-      margin-top: 1rem;
-    }
-
-    .story-progress-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .story-progress-bar {
-      width: 100%;
-      height: 8px;
-      background: hsl(35, 20%, 90%);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .story-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
-      border-radius: 4px;
-      transition: width 0.5s ease;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 4rem 2rem;
-      font-size: 1.1rem;
-      color: hsl(25, 10%, 45%);
-    }
-
-    .hidden {
-      display: none !important;
+      background: hsl(35, 20%, 85%);
     }
 
     .toast {
@@ -428,19 +418,120 @@
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: white;
+      background: hsl(25, 15%, 20%);
+      color: white;
       padding: 1rem 1.5rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      font-weight: 600;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       z-index: 1000;
       opacity: 0;
       transition: all 0.3s ease;
+      max-width: 90%;
     }
 
     .toast.show {
-      transform: translateX(-50%) translateY(0);
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Popup Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: hsl(25, 10%, 45%);
+      transition: color 0.2s;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      color: hsl(25, 15%, 20%);
+    }
+
+    .ranks-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ranks-table th,
+    .ranks-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid hsl(35, 20%, 90%);
+    }
+
+    .ranks-table th {
+      background: hsl(35, 20%, 97%);
+      font-weight: 600;
+      color: hsl(25, 15%, 30%);
+    }
+
+    .ranks-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ranks-table .rank-cell {
+      font-weight: 600;
+      color: hsl(350, 75%, 58%);
+    }
+
+    .ranks-table .mythic-rank {
+      background: linear-gradient(135deg, hsl(45, 90%, 95%), hsl(350, 75%, 95%));
+      font-weight: bold;
     }
 
     @keyframes fadeInUp {
@@ -454,348 +545,226 @@
       }
     }
 
-    /* Popup styles */
-    .popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
+    @media (max-width: 640px) {
+      .stats-grid {
+        gap: 0.75rem;
+      }
 
-    .popup-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+      .stat-card {
+        padding: 0.75rem;
+      }
 
-    .popup-content {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      max-width: 500px;
-      width: 100%;
-      max-height: 80vh;
-      overflow-y: auto;
-      transform: scale(0.9);
-      transition: transform 0.3s ease;
-    }
+      .stat-icon {
+        font-size: 1.25rem;
+      }
 
-    .popup-overlay.show .popup-content {
-      transform: scale(1);
-    }
-
-    .popup-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .popup-header h3 {
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .popup-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: none;
-      background: hsl(35, 30%, 95%);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
-    }
-
-    .popup-close:hover {
-      background: hsl(350, 75%, 58%);
-      color: white;
-    }
-
-    .rank-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .rank-table th,
-    .rank-table td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid hsl(35, 20%, 90%);
-    }
-
-    .rank-table th {
-      background: linear-gradient(135deg, hsl(35, 30%, 98%), hsl(35, 30%, 95%));
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: hsl(25, 15%, 30%);
-    }
-
-    .rank-table td {
-      font-size: 0.9rem;
-    }
-
-    .rank-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .rank-mythic {
-      background: linear-gradient(135deg, hsl(45, 90%, 95%), hsl(45, 90%, 90%));
-      font-weight: 600;
-    }
-
-    .rank-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      .stat-value {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="rice-pattern"></div>
+
   <div class="container">
-    <div id="loading" class="loading">
-      <p>Загрузка профиля...</p>
+    <header class="header">
+      <h1>👤 Профиль</h1>
+      <p class="subtitle">Мой профиль Orimori</p>
+    </header>
+
+    <div class="profile-hero">
+      <div class="profile-photo-container">
+        <svg class="progress-ring">
+          <circle class="progress-ring-circle progress-ring-bg" cx="90" cy="90" r="82" />
+          <circle 
+            id="progressCircle"
+            class="progress-ring-circle progress-ring-fill" 
+            cx="90" 
+            cy="90" 
+            r="82" 
+          />
+        </svg>
+        <img 
+          id="profilePhoto"
+          class="profile-photo" 
+          src="https://via.placeholder.com/156" 
+          alt="Profile Photo"
+        />
+        <div id="xpBadge" class="xp-badge">0 XP</div>
+        <div id="levelBadge" class="level-badge">LVL 1</div>
+      </div>
+
+      <div class="profile-info">
+        <h2 id="displayName" class="display-name">User</h2>
+        <p id="username" class="username">@username</p>
+        <span id="userStatus" class="user-status">🌱 Новичок</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div id="statXP" class="stat-value">0</div>
+          <div class="stat-label">XP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔰</div>
+          <div id="statLevel" class="stat-value">1</div>
+          <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏅</div>
+          <div id="statRank" class="stat-value">Новичок</div>
+          <div class="stat-label">Rank</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div id="statCoins" class="stat-value">0</div>
+          <div class="stat-label">Coins</div>
+        </div>
+      </div>
+
+      <a href="ranking.html" class="ranking-button">
+        🏆 Перейти в рейтинг
+      </a>
     </div>
 
-    <div id="profileContent" class="hidden">
-      <!-- Profile Hero Section -->
-      <div class="profile-hero">
-        <div class="profile-photo-container">
-          <svg class="progress-ring" width="180" height="180">
-            <circle class="progress-ring-circle progress-ring-bg" cx="90" cy="90" r="82" />
-            <circle class="progress-ring-circle progress-ring-fill" cx="90" cy="90" r="82" id="progressCircle" />
-          </svg>
-          <img id="profilePhoto" class="profile-photo" src="" alt="Profile Photo" />
-          <div class="xp-badge" id="xpBadge">0 XP</div>
-          <div class="level-badge" id="levelBadge">LVL 1</div>
+    <div class="about-section">
+      <h3 class="section-title">
+        <span>📝</span>
+        О себе
+      </h3>
+      <p id="aboutMeDisplay" class="about-text">Информация не указана</p>
+    </div>
+
+    <div class="progress-section">
+      <h3 class="section-title">
+        <span>📖</span>
+        Прогресс истории
+      </h3>
+      <div class="progress-bar-container">
+        <div id="storyProgressBar" class="progress-bar">
+          <span id="storyProgressPercent">0%</span>
         </div>
-        <div class="profile-info">
-          <h2 id="displayName">User</h2>
-          <div class="profile-username" id="username" onclick="openTelegramChat()">@username</div>
-          <div class="profile-status" id="userStatus" onclick="showRankPopup()">🌱 Новичок</div>
+      </div>
+    </div>
+
+    <div id="editSection" class="edit-section">
+      <h3 class="section-title">
+        <span>✏️</span>
+        Редактировать профиль
+      </h3>
+
+      <div class="form-group">
+        <label class="form-label">Отображаемое имя</label>
+        <input 
+          id="editDisplayName"
+          type="text" 
+          class="form-input" 
+          placeholder="Введите имя"
+          maxlength="50"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">О себе</label>
+        <textarea 
+          id="editAboutMe"
+          class="form-textarea" 
+          placeholder="Расскажите о себе"
+          maxlength="500"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Фото профиля</label>
+        <div id="photoUploadArea" class="photo-upload-area">
+          <div id="uploadText" class="upload-text">
+            <p>📷</p>
+            <p>Нажмите для загрузки фото</p>
+          </div>
+          <img id="photoPreview" class="photo-preview" alt="Preview" />
+          <input id="photoInput" type="file" accept="image/*" style="display: none;" />
         </div>
       </div>
 
-      <!-- Stats Section -->
-      <div class="card" style="animation-delay: 0.2s;">
-        <h3>
-          <span class="card-icon">📊</span>
-          Статистика
-        </h3>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-label">⭐ Уровень</div>
-            <div class="stat-value" id="statLevel">1</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">✨ Orimori XP</div>
-            <div class="stat-value" id="statXP">0</div>
-          </div>
-          <div class="stat-item">
-            <button class="ranking-button" onclick="window.location.href='ranking.html'">
-              🏆 Рейтинг
-            </button>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">💰 Монеты</div>
-            <div class="stat-value" id="statCoins">0</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- About Me Section -->
-      <div class="card" style="animation-delay: 0.3s;">
-        <h3>
-          <span class="card-icon">💬</span>
-          О себе
-        </h3>
-        <p id="aboutMeDisplay" style="color: hsl(25, 10%, 45%); font-size: 0.95rem; line-height: 1.6;">
-          Информация не указана
-        </p>
-      </div>
-
-      <!-- Achievements Section -->
-      <div class="card" style="animation-delay: 0.4s;">
-        <h3>
-          <span class="card-icon">🏆</span>
-          Достижения
-        </h3>
-        <div class="achievements-grid">
-          <div class="achievement unlocked">
-            <div class="achievement-icon">🎯</div>
-            <div class="achievement-name">Первый шаг</div>
-          </div>
-          <div class="achievement">
-            <div class="achievement-icon">⭐</div>
-            <div class="achievement-name">Звезда</div>
-          </div>
-          <div class="achievement">
-            <div class="achievement-icon">🔥</div>
-            <div class="achievement-name">В огне</div>
-          </div>
-          <div class="achievement">
-            <div class="achievement-icon">💎</div>
-            <div class="achievement-name">Алмаз</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Inventory Section -->
-      <div class="card" style="animation-delay: 0.45s;">
-        <h3>
-          <span class="card-icon">🎒</span>
-          Инвентарь
-        </h3>
-        <div class="achievements-grid" id="inventoryGrid">
-          <div class="achievement unlocked">
-            <div class="achievement-icon">🍚</div>
-            <div class="achievement-name">Рис</div>
-          </div>
-          <div class="achievement unlocked">
-            <div class="achievement-icon">🐟</div>
-            <div class="achievement-name">Рыба</div>
-          </div>
-          <div class="achievement">
-            <div class="achievement-icon">🥢</div>
-            <div class="achievement-name">Палочки</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Story Progress Section -->
-      <div class="card" style="animation-delay: 0.5s;">
-        <h3>
-          <span class="card-icon">📖</span>
-          История
-        </h3>
-        <div class="story-progress-container">
-          <div class="story-progress-label">
-            <span>Прогресс истории</span>
-            <span id="storyProgressPercent">0%</span>
-          </div>
-          <div class="story-progress-bar">
-            <div class="story-progress-fill" id="storyProgressBar" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Edit Profile Section (Only for own profile) -->
-      <div id="editSection" class="card" style="animation-delay: 0.55s;">
-        <h3>
-          <span class="card-icon">✏️</span>
-          Редактировать профиль
-        </h3>
-
-        <div class="form-group">
-          <label for="editDisplayName">Отображаемое имя</label>
-          <input type="text" id="editDisplayName" placeholder="Ваше имя" />
-        </div>
-
-        <div class="form-group">
-          <label for="editAboutMe">О себе</label>
-          <textarea id="editAboutMe" placeholder="Расскажите о себе..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Фото профиля</label>
-          <div class="photo-upload-area" id="photoUploadArea">
-            <img id="photoPreview" class="photo-preview" src="" alt="Preview" />
-            <div id="uploadText">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
-              <div style="font-weight: 600; margin-bottom: 0.25rem;">Загрузить фото</div>
-              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Нажмите для выбора</div>
-            </div>
-          </div>
-          <input type="file" id="photoInput" accept="image/*" style="display: none;" />
-        </div>
-
-        <button class="btn btn-primary" id="saveProfileBtn">
-          💾 Сохранить изменения
-        </button>
+      <div class="button-group">
+        <button id="saveBtn" class="btn btn-primary">Сохранить</button>
+        <button id="cancelBtn" class="btn btn-secondary">Отмена</button>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast"></div>
-
-  <!-- Rank Popup -->
-  <div id="rankPopup" class="popup-overlay" onclick="closeRankPopup(event)">
-    <div class="popup-content" onclick="event.stopPropagation()">
-      <div class="popup-header">
-        <h3>🏆 Система рангов</h3>
-        <button class="popup-close" onclick="closeRankPopup()">×</button>
+  <!-- Ranks Modal -->
+  <div id="rankPopup" class="modal-overlay" onclick="closeRankPopup(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🏆 Таблица званий</h2>
+        <button class="close-btn" onclick="closeRankPopup()">&times;</button>
       </div>
-      <table class="rank-table">
+      <table class="ranks-table">
         <thead>
           <tr>
             <th>XP</th>
-            <th>Уровень</th>
-            <th>Звание</th>
+            <th>Level</th>
+            <th>Rank</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>0</td>
             <td>1</td>
-            <td><div class="rank-title">🌱 Новичок</div></td>
+            <td class="rank-cell">🌱 Новичок</td>
           </tr>
           <tr>
             <td>50</td>
             <td>2</td>
-            <td><div class="rank-title">📚 Ученик Риса</div></td>
+            <td class="rank-cell">📚 Ученик Риса</td>
           </tr>
           <tr>
             <td>200</td>
             <td>3</td>
-            <td><div class="rank-title">🍙 Ролл-Воин</div></td>
+            <td class="rank-cell">🍙 Ролл-Воин</td>
           </tr>
           <tr>
             <td>500</td>
             <td>4</td>
-            <td><div class="rank-title">👨‍🍳 Мастер Вкусов</div></td>
+            <td class="rank-cell">👨‍🍳 Мастер Вкусов</td>
           </tr>
           <tr>
             <td>1000</td>
             <td>5</td>
-            <td><div class="rank-title">🍯 Хранитель Соуса</div></td>
+            <td class="rank-cell">🍯 Хранитель Соуса</td>
           </tr>
           <tr>
             <td>2000</td>
             <td>6</td>
-            <td><div class="rank-title">⚔️ Защитник Трезубца</div></td>
+            <td class="rank-cell">⚔️ Защитник Трезубца</td>
           </tr>
-          <tr class="rank-mythic">
-            <td>top-10</td>
-            <td>7</td>
-            <td><div class="rank-title">🏆 <strong>Бог Вкусов</strong> (мифический ранг)</div></td>
+          <tr class="mythic-rank">
+            <td><strong>top-10</strong></td>
+            <td><strong>7</strong></td>
+            <td class="rank-cell"><strong>🏆 Бог Вкусов</strong></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script>
-    const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
+    // Configuration
+    const SUPABASE_URL = 'https://xrmbbgldrtcfuvrmgfhi.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhybWJiZ2xkcnRjZnV2cm1nZmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY1OTA3MjAsImV4cCI6MjA1MjE2NjcyMH0.V5v1aVN2ZCT0eYsPvw4q8aZQYRYUzKEdipXCZ9_RJA4';
 
     // Initialize Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
 
-    // User data storage
+    // User data structure
     let userData = {
       id: null,
       username: '',
@@ -817,27 +786,6 @@
     // Check if viewing another user's profile
     const urlParams = new URLSearchParams(window.location.search);
     const viewingUserId = urlParams.get('id');
-
-    // Open Telegram chat function
-    function openTelegramChat() {
-      if (userData.username) {
-        window.open(`https://t.me/${userData.username}`, '_blank');
-      } else {
-        showToast('❌ У пользователя нет username');
-      }
-    }
-
-    // Show rank popup
-    function showRankPopup() {
-      document.getElementById('rankPopup').classList.add('show');
-    }
-
-    // Close rank popup
-    function closeRankPopup(event) {
-      if (!event || event.target.id === 'rankPopup') {
-        document.getElementById('rankPopup').classList.remove('show');
-      }
-    }
 
     // Calculate level from XP
     function calculateLevel(xp) {
@@ -871,6 +819,34 @@
       }, 3000);
     }
 
+    // Show rank popup
+    function showRankPopup() {
+      document.getElementById('rankPopup').classList.add('show');
+    }
+
+    // Close rank popup
+    function closeRankPopup(event) {
+      if (!event || event.target.id === 'rankPopup') {
+        document.getElementById('rankPopup').classList.remove('show');
+      }
+    }
+
+    // Make username clickable if exists
+    function makeUsernameClickable() {
+      const usernameEl = document.getElementById('username');
+      if (userData.username) {
+        usernameEl.classList.add('clickable');
+        usernameEl.style.cursor = 'pointer';
+        usernameEl.onclick = () => {
+          window.open(`https://t.me/${userData.username}`, '_blank');
+        };
+      } else {
+        usernameEl.classList.remove('clickable');
+        usernameEl.style.cursor = 'default';
+        usernameEl.onclick = null;
+      }
+    }
+
     // Supabase API call
     async function supabaseRequest(endpoint, method = 'GET', body = null) {
       const options = {
@@ -896,122 +872,99 @@
       return response.json();
     }
 
-    // Send user data to Supabase and get extended data
+    // FIXED: Sync with Supabase - always fetch from database
     async function syncWithSupabase() {
       try {
-        // If viewing another user's profile, just fetch their data
-        if (viewingUserId) {
-          const fullData = await supabaseRequest(`users?id=eq.${viewingUserId}&select=*`);
-          
-          if (fullData && fullData.length > 0) {
-            userData = {
-              ...userData,
-              ...fullData[0]
-            };
-            return userData;
-          } else {
-            // User not found
-            showToast('❌ Пользователь не найден');
-            document.body.innerHTML = `
-              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">😕</div>
-                <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Пользователь не найден</h2>
-                <p style="color: hsl(25, 10%, 45%); margin-bottom: 2rem;">ID ${viewingUserId} не существует в системе</p>
-                <a href="profile.html" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%)); color: white; text-decoration: none; border-radius: 0.75rem; font-weight: 600;">Вернуться к своему профилю</a>
-              </div>
-            `;
-            throw new Error('User not found');
-          }
-        }
-
-        // For own profile: Try to get current user ID from Telegram
-        const user = tg.initDataUnsafe?.user;
+        let userId;
         
-        if (!user || !user.id) {
-          // Fallback: Try to load from localStorage
-          const cached = localStorage.getItem('orimori_user_data');
-          if (cached) {
-            const cachedData = JSON.parse(cached);
-            if (cachedData.id) {
-              // Load own profile from cache
-              const fullData = await supabaseRequest(`users?id=eq.${cachedData.id}&select=*`);
-              if (fullData && fullData.length > 0) {
-                userData = {
-                  ...userData,
-                  ...fullData[0]
-                };
-                return userData;
-              }
-            }
-          }
-          throw new Error('Cannot determine user ID');
+        // Determine which user ID to use
+        if (viewingUserId) {
+          userId = viewingUserId;
+        } else if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+          userId = tg.initDataUnsafe.user.id;
+        } else {
+          throw new Error('No user ID available');
         }
 
-        // Prepare user data for current user
-        const userPayload = {
-          id: user.id,
-          username: user.username || '',
-          first_name: user.first_name || '',
-          last_name: user.last_name || '',
-          photo_url: user.photo_url || '',
-          auth_time: new Date().toISOString()
-        };
+        console.log('Fetching user data for ID:', userId);
 
-        // Upsert user data
-        await supabaseRequest(
-          `users?id=eq.${user.id}`,
-          'POST',
-          userPayload
-        );
-
-        // Fetch full user data from Supabase
-        const fullData = await supabaseRequest(`users?id=eq.${user.id}&select=*`);
+        // Fetch user data from Supabase
+        const fullData = await supabaseRequest(`users?id=eq.${userId}&select=*`);
         
         if (fullData && fullData.length > 0) {
+          // User exists in database - use Supabase data
           userData = {
             ...userData,
             ...fullData[0]
           };
-          
-          // Save to localStorage
-          localStorage.setItem('orimori_user_data', JSON.stringify(userData));
-          
-          return userData;
+          console.log('User data loaded from Supabase:', userData);
+        } else {
+          // User not found in database
+          if (viewingUserId) {
+            // Viewing another user who doesn't exist
+            showToast('❌ Пользователь не найден');
+            document.body.innerHTML = `
+              <div class="container">
+                <div class="profile-hero">
+                  <h2>Пользователь не найден</h2>
+                  <p>Этот профиль не существует</p>
+                  <a href="index.html" class="ranking-button" style="margin-top: 1rem;">Вернуться на главную</a>
+                </div>
+              </div>
+            `;
+            return null;
+          } else {
+            // Current user not in database - create new record
+            if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+              throw new Error('No Telegram user data available');
+            }
+
+            const tgUser = tg.initDataUnsafe.user;
+            
+            // Prepare new user data
+            const newUserData = {
+              id: tgUser.id,
+              username: tgUser.username || '',
+              first_name: tgUser.first_name || '',
+              last_name: tgUser.last_name || '',
+              photo_url: tgUser.photo_url || '',
+              orimori_xp: 0,
+              orimori_coins: 0,
+              display_name: tgUser.first_name || '',
+              about_me: '',
+              custom_photo: '',
+              auth_time: new Date().toISOString(),
+              inventory: [],
+              unlocked_locations: [],
+              story_progress: 0
+            };
+
+            console.log('Creating new user in database:', newUserData);
+
+            // Insert new user
+            const createdUser = await supabaseRequest('users', 'POST', newUserData);
+            
+            if (createdUser && createdUser.length > 0) {
+              userData = {
+                ...userData,
+                ...createdUser[0]
+              };
+              console.log('New user created:', userData);
+              showToast('✅ Профиль создан');
+            } else {
+              throw new Error('Failed to create user');
+            }
+          }
         }
 
-        return userData;
-      } catch (error) {
-        console.error('Supabase sync error:', error);
-        throw error;
-      }
-    }
-
-    // Update profile data
-    async function updateProfile(updates) {
-      if (!userData.id) {
-        showToast('❌ User ID not available');
-        return false;
-      }
-
-      try {
-        await supabaseRequest(
-          `users?id=eq.${userData.id}`,
-          'PATCH',
-          updates
-        );
-
-        // Update local userData
-        userData = { ...userData, ...updates };
-        
-        // Update localStorage
+        // Save to localStorage
         localStorage.setItem('orimori_user_data', JSON.stringify(userData));
         
-        showToast('✅ Профиль обновлен');
-        return true;
+        return userData;
       } catch (error) {
-        console.error('Profile update error:', error);
-        showToast('❌ Ошибка обновления профиля');
-        return false;
+        console.error('Sync error:', error);
+        showToast('❌ Ошибка загрузки данных');
+        return null;
       }
     }
 
@@ -1035,6 +988,7 @@
       // Update username
       const username = userData.username ? `@${userData.username}` : `ID: ${userData.id}`;
       document.getElementById('username').textContent = username;
+      makeUsernameClickable();
 
       // Update XP and Level badges
       document.getElementById('xpBadge').textContent = `${userData.orimori_xp} XP`;
@@ -1048,13 +1002,16 @@
       circle.style.strokeDasharray = `${circumference} ${circumference}`;
       circle.style.strokeDashoffset = offset;
 
-      // Update stats
+      // Update stats with icons
       document.getElementById('statLevel').textContent = level;
       document.getElementById('statXP').textContent = userData.orimori_xp;
       document.getElementById('statCoins').textContent = userData.orimori_coins || 0;
 
-      // Update status with rank title
+      // Update rank in stats
       const rankTitle = getRankTitle(level, userData.orimori_xp, false);
+      document.getElementById('statRank').textContent = rankTitle.replace(/[^\u0000-\u007F]/g, '').trim();
+
+      // Update status with rank title
       document.getElementById('userStatus').textContent = rankTitle;
 
       // Update about me
@@ -1090,69 +1047,94 @@
 
     document.getElementById('photoInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        document.getElementById('photoPreview').src = base64;
-        document.getElementById('photoPreview').classList.add('visible');
-        document.getElementById('uploadText').style.display = 'none';
-        document.getElementById('photoUploadArea').classList.add('has-image');
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Handle profile save
-    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-      const displayName = document.getElementById('editDisplayName').value.trim();
-      const aboutMe = document.getElementById('editAboutMe').value.trim();
-      const photoPreview = document.getElementById('photoPreview');
-      const customPhoto = photoPreview.classList.contains('visible') ? photoPreview.src : null;
-
-      const updates = {};
-      
-      if (displayName) updates.display_name = displayName;
-      if (aboutMe) updates.about_me = aboutMe;
-      if (customPhoto && customPhoto.startsWith('data:')) updates.custom_photo = customPhoto;
-
-      if (Object.keys(updates).length === 0) {
-        showToast('⚠️ Нет изменений для сохранения');
-        return;
-      }
-
-      const success = await updateProfile(updates);
-      if (success) {
-        updateUI();
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const preview = document.getElementById('photoPreview');
+          preview.src = event.target.result;
+          preview.classList.add('visible');
+          document.getElementById('uploadText').style.display = 'none';
+          document.getElementById('photoUploadArea').classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
       }
     });
 
-    // Initialize app
-    async function init() {
+    // Save profile
+    document.getElementById('saveBtn').addEventListener('click', async () => {
       try {
-        // Show loading
-        document.getElementById('loading').classList.remove('hidden');
-        document.getElementById('profileContent').classList.add('hidden');
+        const updates = {
+          display_name: document.getElementById('editDisplayName').value || userData.first_name,
+          about_me: document.getElementById('editAboutMe').value || ''
+        };
 
-        // Sync with Supabase
-        await syncWithSupabase();
+        // Handle custom photo
+        const photoPreview = document.getElementById('photoPreview');
+        if (photoPreview.classList.contains('visible')) {
+          updates.custom_photo = photoPreview.src;
+        }
 
+        console.log('Updating profile:', updates);
+
+        // Update in Supabase
+        await supabaseRequest(
+          `users?id=eq.${userData.id}`,
+          'PATCH',
+          updates
+        );
+
+        // Update local userData
+        userData = { ...userData, ...updates };
+        
+        // Update localStorage
+        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+        
         // Update UI
         updateUI();
+        
+        showToast('✅ Профиль обновлен');
+      } catch (error) {
+        console.error('Profile update error:', error);
+        showToast('❌ Ошибка обновления профиля');
+      }
+    });
 
-        // Hide loading, show content
-        document.getElementById('loading').classList.add('hidden');
-        document.getElementById('profileContent').classList.remove('hidden');
+    // Cancel editing
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      // Reset form fields
+      document.getElementById('editDisplayName').value = userData.display_name || '';
+      document.getElementById('editAboutMe').value = userData.about_me || '';
+      
+      // Reset photo preview
+      const photoPreview = document.getElementById('photoPreview');
+      if (userData.custom_photo) {
+        photoPreview.src = userData.custom_photo;
+        photoPreview.classList.add('visible');
+        document.getElementById('uploadText').style.display = 'none';
+      } else {
+        photoPreview.classList.remove('visible');
+        document.getElementById('uploadText').style.display = 'block';
+        document.getElementById('photoUploadArea').classList.remove('has-image');
+      }
+      
+      showToast('Изменения отменены');
+    });
 
-        showToast('✅ Профиль загружен');
+    // Add click handler to user status for showing ranks popup
+    document.getElementById('userStatus').addEventListener('click', showRankPopup);
+
+    // Initialize
+    (async () => {
+      try {
+        await syncWithSupabase();
+        if (userData.id) {
+          updateUI();
+        }
       } catch (error) {
         console.error('Initialization error:', error);
-        document.getElementById('loading').innerHTML = '<p style="color: hsl(350, 75%, 58%);">❌ Ошибка загрузки профиля</p>';
+        showToast('❌ Ошибка инициализации');
       }
-    }
-
-    // Start the app
-    init();
+    })();
   </script>
 </body>
 </html>
