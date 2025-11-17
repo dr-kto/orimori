@@ -6,7 +6,6 @@
   <title>Orimori - Профиль</title>
   <meta name="description" content="Orimori пайдаланушы профилі" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
     * {
@@ -22,13 +21,7 @@
       color: hsl(25, 15%, 20%);
       position: relative;
       overflow-x: hidden;
-      padding-bottom: 80px;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    body.dark {
-      background: linear-gradient(180deg, hsl(220, 30%, 15%), hsl(220, 30%, 10%));
-      color: hsl(0, 0%, 95%);
+      padding-bottom: 2rem;
     }
 
     .rice-pattern {
@@ -44,14 +37,6 @@
       z-index: 0;
     }
 
-    body.dark .rice-pattern {
-      opacity: 0.05;
-      background-image: 
-        radial-gradient(circle at 20% 30%, hsl(0, 0%, 95%) 1px, transparent 1px),
-        radial-gradient(circle at 60% 70%, hsl(0, 0%, 95%) 1px, transparent 1px),
-        radial-gradient(circle at 80% 20%, hsl(0, 0%, 95%) 1px, transparent 1px);
-    }
-
     .container {
       position: relative;
       z-index: 10;
@@ -60,61 +45,15 @@
       padding: 1rem;
     }
 
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      animation: fadeInUp 0.7s ease-out;
-    }
-
-    .header-title {
-      flex: 1;
+    .loading {
       text-align: center;
-    }
-
-    .header h1 {
-      font-size: 1.75rem;
-      font-weight: bold;
-      margin-bottom: 0.25rem;
-    }
-
-    .header .subtitle {
-      font-size: 0.9rem;
+      padding: 3rem 1rem;
+      font-size: 1.1rem;
       color: hsl(25, 10%, 45%);
     }
 
-    body.dark .header .subtitle {
-      color: hsl(0, 0%, 65%);
-    }
-
-    .settings-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 12px -2px rgba(60, 45, 40, 0.08);
-    }
-
-    body.dark .settings-btn {
-      background: hsl(220, 30%, 20%);
-    }
-
-    .settings-btn:hover {
-      transform: rotate(90deg);
-      box-shadow: 0 4px 20px -2px rgba(60, 45, 40, 0.12);
-    }
-
-    .settings-btn.hidden {
-      visibility: hidden;
+    .hidden {
+      display: none;
     }
 
     .profile-hero {
@@ -124,12 +63,7 @@
       box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
       text-align: center;
       margin-bottom: 1.5rem;
-      animation: fadeInUp 0.7s ease-out 0.1s backwards;
-    }
-
-    body.dark .profile-hero {
-      background: hsl(220, 30%, 18%);
-      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 0.7s ease-out;
     }
 
     .profile-photo-container {
@@ -154,15 +88,11 @@
       stroke-width: 8;
     }
 
-    .progress-ring-background {
+    .progress-ring-bg {
       stroke: hsl(25, 10%, 85%);
     }
 
-    body.dark .progress-ring-background {
-      stroke: hsl(220, 30%, 25%);
-    }
-
-    .progress-ring-progress {
+    .progress-ring-fill {
       stroke: hsl(350, 75%, 58%);
     }
 
@@ -177,103 +107,115 @@
       border: 4px solid white;
     }
 
-    body.dark .profile-photo {
-      border-color: hsl(220, 30%, 18%);
+    .xp-badge, .level-badge {
+      position: absolute;
+      background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 8px rgba(232, 53, 78, 0.3);
     }
 
-    .profile-name {
+    .xp-badge {
+      bottom: 0;
+      left: 0;
+    }
+
+    .level-badge {
+      bottom: 0;
+      right: 0;
+    }
+
+    .profile-info h2 {
       font-size: 1.75rem;
       font-weight: bold;
       margin-bottom: 0.5rem;
     }
 
-    .profile-bio {
-      font-size: 1rem;
-      color: hsl(25, 10%, 45%);
-      margin-bottom: 1rem;
+    .profile-username {
+      font-size: 0.95rem;
+      color: hsl(350, 75%, 58%);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
     }
 
-    body.dark .profile-bio {
-      color: hsl(0, 0%, 65%);
-    }
-
-    .profile-rank {
+    .profile-status {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
-      color: white;
+      background: hsl(35, 30%, 95%);
       border-radius: 2rem;
       font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .profile-rank:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.3);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      animation: fadeInUp 0.7s ease-out 0.2s backwards;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      box-shadow: 0 2px 12px -2px rgba(60, 45, 40, 0.08);
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    body.dark .stat-card {
-      background: hsl(220, 30%, 18%);
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px -2px rgba(60, 45, 40, 0.12);
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: bold;
-      color: hsl(350, 75%, 58%);
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
       font-size: 0.9rem;
-      color: hsl(25, 10%, 45%);
+      color: hsl(25, 15%, 20%);
     }
 
-    body.dark .stat-label {
-      color: hsl(0, 0%, 65%);
-    }
-
-    .achievements-section {
+    .card {
       background: white;
       border-radius: 1.5rem;
       padding: 1.5rem;
       box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
-      animation: fadeInUp 0.7s ease-out 0.3s backwards;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.7s ease-out backwards;
     }
 
-    body.dark .achievements-section {
-      background: hsl(220, 30%, 18%);
-    }
-
-    .achievements-section h2 {
-      font-size: 1.5rem;
+    .card h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
       margin-bottom: 1rem;
-      text-align: center;
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: hsl(35, 30%, 97%);
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      background: hsl(35, 30%, 95%);
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .stat-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: hsl(350, 75%, 58%);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: hsl(25, 10%, 45%);
     }
 
     .achievements-grid {
@@ -282,31 +224,25 @@
       gap: 1rem;
     }
 
-    .achievement-item {
+    .achievement {
       text-align: center;
       padding: 1rem;
       background: hsl(35, 30%, 95%);
       border-radius: 1rem;
       transition: all 0.3s ease;
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+
+    .achievement.unlocked {
+      opacity: 1;
+      filter: grayscale(0%);
       cursor: pointer;
     }
 
-    body.dark .achievement-item {
-      background: hsl(220, 30%, 22%);
-    }
-
-    .achievement-item:hover {
+    .achievement.unlocked:hover {
       transform: scale(1.05);
       background: hsl(350, 75%, 95%);
-    }
-
-    body.dark .achievement-item:hover {
-      background: hsl(220, 30%, 25%);
-    }
-
-    .achievement-item.locked {
-      opacity: 0.4;
-      filter: grayscale(100%);
     }
 
     .achievement-icon {
@@ -319,116 +255,8 @@
       font-weight: 600;
     }
 
-    /* Popup styles */
-    .popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-      backdrop-filter: blur(4px);
-    }
-
-    .popup-overlay.active {
-      display: flex;
-    }
-
-    .popup {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      max-width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      animation: popupSlideUp 0.3s ease;
-      position: relative;
-    }
-
-    body.dark .popup {
-      background: hsl(220, 30%, 18%);
-    }
-
-    .popup-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: hsl(25, 10%, 85%);
-      border: none;
-      cursor: pointer;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-
-    body.dark .popup-close {
-      background: hsl(220, 30%, 25%);
-    }
-
-    .popup-close:hover {
-      background: hsl(350, 75%, 58%);
-      color: white;
-      transform: rotate(90deg);
-    }
-
-    .popup h2 {
-      font-size: 1.75rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    /* Rank table */
-    .rank-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .rank-table th,
-    .rank-table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid hsl(25, 10%, 85%);
-    }
-
-    body.dark .rank-table th,
-    body.dark .rank-table td {
-      border-bottom-color: hsl(220, 30%, 25%);
-    }
-
-    .rank-table th {
-      font-weight: 600;
-      background: hsl(35, 30%, 95%);
-    }
-
-    body.dark .rank-table th {
-      background: hsl(220, 30%, 22%);
-    }
-
-    .rank-table tr:hover {
-      background: hsl(35, 30%, 97%);
-    }
-
-    body.dark .rank-table tr:hover {
-      background: hsl(220, 30%, 20%);
-    }
-
-    .rank-table .mythic {
-      color: hsl(280, 75%, 58%);
-      font-weight: bold;
-    }
-
-    /* Settings popup */
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .form-group label {
@@ -449,13 +277,6 @@
       transition: all 0.3s ease;
       background: white;
       color: hsl(25, 15%, 20%);
-    }
-
-    body.dark .form-group input,
-    body.dark .form-group textarea {
-      background: hsl(220, 30%, 15%);
-      border-color: hsl(220, 30%, 25%);
-      color: hsl(0, 0%, 95%);
     }
 
     .form-group input:focus,
@@ -481,19 +302,14 @@
       color: hsl(25, 10%, 45%);
     }
 
-    body.dark .photo-upload-area {
-      background: hsl(220, 30%, 15%);
-      border-color: hsl(220, 30%, 25%);
-      color: hsl(0, 0%, 65%);
-    }
-
     .photo-upload-area:hover {
       border-color: hsl(350, 75%, 58%);
       background: hsl(35, 30%, 95%);
     }
 
-    body.dark .photo-upload-area:hover {
-      background: hsl(220, 30%, 20%);
+    .photo-upload-area.has-image {
+      border-style: solid;
+      padding: 1rem;
     }
 
     .photo-preview {
@@ -507,64 +323,6 @@
 
     .photo-preview.visible {
       display: block;
-    }
-
-    .language-selector {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin: 1rem 0;
-    }
-
-    .language-flag {
-      font-size: 2.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      opacity: 0.5;
-      filter: grayscale(100%);
-    }
-
-    .language-flag.active {
-      opacity: 1;
-      filter: grayscale(0%);
-      transform: scale(1.2);
-    }
-
-    .language-flag:hover {
-      transform: scale(1.1);
-    }
-
-    .theme-toggle {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      justify-content: center;
-      margin: 1.5rem 0;
-    }
-
-    .theme-option {
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      border: 2px solid hsl(25, 10%, 85%);
-      background: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 600;
-    }
-
-    body.dark .theme-option {
-      background: hsl(220, 30%, 15%);
-      border-color: hsl(220, 30%, 25%);
-    }
-
-    .theme-option.active {
-      background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
-      color: white;
-      border-color: hsl(350, 75%, 58%);
-    }
-
-    .theme-option:hover {
-      transform: translateY(-2px);
     }
 
     .btn {
@@ -595,9 +353,23 @@
       transform: translateY(-2px);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: hsl(25, 15%, 20%);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
     }
 
     @keyframes fadeInUp {
@@ -610,397 +382,401 @@
         transform: translateY(0);
       }
     }
-
-    @keyframes popupSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
   </style>
 </head>
-
 <body>
   <div class="rice-pattern"></div>
-
+  
   <div class="container">
-    <div class="header">
-      <div style="width: 40px;"></div>
-      <div class="header-title">
-        <h1>👤 Профиль</h1>
-        <p class="subtitle">Көріңіз профиліңізді</p>
-      </div>
-      <button class="settings-btn hidden" id="settingsBtn" title="Баптаулар">⚙️</button>
+    <div id="loading" class="loading">
+      <p>Загрузка профиля...</p>
     </div>
 
-    <div class="profile-hero">
-      <div class="profile-photo-container">
-        <svg class="progress-ring" width="180" height="180">
-          <circle class="progress-ring-circle progress-ring-background" 
-                  stroke-width="8" fill="transparent" r="82" cx="90" cy="90"/>
-          <circle class="progress-ring-circle progress-ring-progress" 
-                  stroke-width="8" fill="transparent" r="82" cx="90" cy="90"
-                  id="progressCircle"/>
-        </svg>
-        <img src="https://ui-avatars.com/api/?name=User&size=156&background=e8354e&color=fff" 
-             alt="Profile" class="profile-photo" id="profilePhoto">
-      </div>
-      
-      <h2 class="profile-name" id="profileName">Пайдаланушы</h2>
-      <p class="profile-bio" id="profileBio">Профиль сипаттамасы</p>
-      
-      <div class="profile-rank" id="profileRank" title="Деңгейді көру үшін басыңыз">
-        <span id="rankIcon">🌟</span>
-        <span id="rankText">Level 1 - Новичок</span>
-      </div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="statXP">0</div>
-        <div class="stat-label">XP</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statOrders">0</div>
-        <div class="stat-label">Тапсырыстар</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statFavorites">0</div>
-        <div class="stat-label">Таңдаулылар</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statVisits">0</div>
-        <div class="stat-label">Кірулер</div>
-      </div>
-    </div>
-
-    <div class="achievements-section">
-      <h2>🏆 Жетістіктер</h2>
-      <div class="achievements-grid" id="achievementsGrid">
-        <div class="achievement-item">
-          <div class="achievement-icon">🍙</div>
-          <div class="achievement-name">Бірінші тапсырыс</div>
+    <div id="profileContent" class="hidden">
+      <!-- Profile Hero Section -->
+      <div class="profile-hero">
+        <div class="profile-photo-container">
+          <svg class="progress-ring" width="180" height="180">
+            <circle class="progress-ring-circle progress-ring-bg" cx="90" cy="90" r="82" />
+            <circle class="progress-ring-circle progress-ring-fill" cx="90" cy="90" r="82" id="progressCircle" />
+          </svg>
+          <img id="profilePhoto" class="profile-photo" src="" alt="Profile Photo" />
+          <div class="xp-badge" id="xpBadge">0 XP</div>
+          <div class="level-badge" id="levelBadge">LVL 1</div>
         </div>
-        <div class="achievement-item locked">
-          <div class="achievement-icon">🔥</div>
-          <div class="achievement-name">5 тапсырыс</div>
-        </div>
-        <div class="achievement-item locked">
-          <div class="achievement-icon">⭐</div>
-          <div class="achievement-name">10 тапсырыс</div>
-        </div>
-        <div class="achievement-item locked">
-          <div class="achievement-icon">💎</div>
-          <div class="achievement-name">Аурулы жан</div>
+        <div class="profile-info">
+          <h2 id="displayName">User</h2>
+          <div class="profile-username" id="username">@username</div>
+          <div class="profile-status" id="userStatus">🌱 Новичок</div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Rank Popup -->
-  <div class="popup-overlay" id="rankPopup">
-    <div class="popup">
-      <button class="popup-close" id="rankPopupClose">✕</button>
-      <h2>🏆 Таблица званий</h2>
-      <table class="rank-table">
-        <thead>
-          <tr>
-            <th>XP</th>
-            <th>Level</th>
-            <th>Rank</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>0</td>
-            <td>1</td>
-            <td>Новичок</td>
-          </tr>
-          <tr>
-            <td>50</td>
-            <td>2</td>
-            <td>Ученик Риса</td>
-          </tr>
-          <tr>
-            <td>200</td>
-            <td>3</td>
-            <td>Ролл-Воин</td>
-          </tr>
-          <tr>
-            <td>500</td>
-            <td>4</td>
-            <td>Мастер Вкусов</td>
-          </tr>
-          <tr>
-            <td>1000</td>
-            <td>5</td>
-            <td>Хранитель Соуса</td>
-          </tr>
-          <tr>
-            <td>2000</td>
-            <td>6</td>
-            <td>Защитник Трезубца</td>
-          </tr>
-          <tr>
-            <td>top-10</td>
-            <td>7</td>
-            <td class="mythic">Бог Вкусов (мифический ранг)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Settings Popup -->
-  <div class="popup-overlay" id="settingsPopup">
-    <div class="popup">
-      <button class="popup-close" id="settingsPopupClose">✕</button>
-      <h2>⚙️ Баптаулар</h2>
-      
-      <div class="form-group">
-        <label>📸 Профиль фотосы</label>
-        <div class="photo-upload-area" id="photoUploadArea">
-          <img src="" alt="Preview" class="photo-preview" id="photoPreview">
-          <input type="file" accept="image/*" style="display: none;" id="photoInput">
-          <div id="uploadText">
-            📷 Фотоны жүктеу үшін басыңыз
+      <!-- Stats Section -->
+      <div class="card" style="animation-delay: 0.2s;">
+        <h3>
+          <span class="card-icon">📊</span>
+          Статистика
+        </h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-content">
+              <div class="stat-value" id="statLevel">1</div>
+              <div class="stat-label">Уровень</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+              <div class="stat-value" id="statXP">0</div>
+              <div class="stat-label">Orimori XP</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-content">
+              <div class="stat-value">Высокая</div>
+              <div class="stat-label">Активность</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">💎</div>
+            <div class="stat-content">
+              <div class="stat-value" id="statCoins">0</div>
+              <div class="stat-label">Монеты</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>✏️ Аты-жөні</label>
-        <input type="text" id="nameInput" placeholder="Сіздің атыңыз">
+      <!-- About Me Section -->
+      <div class="card" style="animation-delay: 0.3s;">
+        <h3>
+          <span class="card-icon">💬</span>
+          О себе
+        </h3>
+        <p id="aboutMeDisplay" style="color: hsl(25, 10%, 45%); font-size: 0.95rem; line-height: 1.6;">
+          Информация не указана
+        </p>
       </div>
 
-      <div class="form-group">
-        <label>📝 Өзіңіз туралы</label>
-        <textarea id="bioInput" placeholder="Өзіңіз туралы жазыңыз..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>🌐 Тіл / Language</label>
-        <div class="language-selector">
-          <span class="language-flag" data-lang="kk">🇰🇿</span>
-          <span class="language-flag active" data-lang="ru">🇷🇺</span>
-          <span class="language-flag" data-lang="en">🇺🇸</span>
+      <!-- Achievements Section -->
+      <div class="card" style="animation-delay: 0.4s;">
+        <h3>
+          <span class="card-icon">🏆</span>
+          Достижения
+        </h3>
+        <div class="achievements-grid">
+          <div class="achievement unlocked">
+            <div class="achievement-icon">🎯</div>
+            <div class="achievement-name">Первый шаг</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">⭐</div>
+            <div class="achievement-name">Звезда</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">🔥</div>
+            <div class="achievement-name">В огне</div>
+          </div>
+          <div class="achievement">
+            <div class="achievement-icon">💎</div>
+            <div class="achievement-name">Алмаз</div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>🌗 Тақырып / Theme</label>
-        <div class="theme-toggle">
-          <div class="theme-option active" data-theme="light">☀️ Жарық</div>
-          <div class="theme-option" data-theme="dark">🌙 Қараңғы</div>
+      <!-- Edit Profile Section (only for own profile) -->
+      <div class="card" id="editSection" style="animation-delay: 0.5s;">
+        <h3>
+          <span class="card-icon">✏️</span>
+          Редактировать профиль
+        </h3>
+        
+        <div class="form-group">
+          <label>Отображаемое имя</label>
+          <input type="text" id="editDisplayName" placeholder="Введите имя" />
         </div>
-      </div>
 
-      <button class="btn btn-primary" id="saveSettingsBtn">
-        💾 Сақтау
-      </button>
+        <div class="form-group">
+          <label>О себе</label>
+          <textarea id="editAboutMe" placeholder="Расскажите о себе..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Фотография профиля</label>
+          <div class="photo-upload-area" id="photoUploadArea">
+            <img id="photoPreview" class="photo-preview" src="" alt="Preview" />
+            <div id="uploadText">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">Загрузить фото</div>
+              <div style="font-size: 0.85rem; color: hsl(25, 10%, 45%);">Нажмите для выбора</div>
+            </div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display: none;" />
+        </div>
+
+        <button class="btn btn-primary" id="saveProfileBtn">
+          💾 Сохранить изменения
+        </button>
+      </div>
     </div>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script>
-    // Initialize Supabase
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
 
-    // Translations
-    const translations = {
-      kk: {
-        title: '👤 Профиль',
-        subtitle: 'Көріңіз профиліңізді',
-        xp: 'XP',
-        orders: 'Тапсырыстар',
-        favorites: 'Таңдаулылар',
-        visits: 'Кірулер',
-        achievements: '🏆 Жетістіктер',
-        settings: '⚙️ Баптаулар',
-        save: '💾 Сақтау'
-      },
-      ru: {
-        title: '👤 Профиль',
-        subtitle: 'Посмотрите свой профиль',
-        xp: 'XP',
-        orders: 'Заказы',
-        favorites: 'Избранное',
-        visits: 'Посещения',
-        achievements: '🏆 Достижения',
-        settings: '⚙️ Настройки',
-        save: '💾 Сохранить'
-      },
-      en: {
-        title: '👤 Profile',
-        subtitle: 'View your profile',
-        xp: 'XP',
-        orders: 'Orders',
-        favorites: 'Favorites',
-        visits: 'Visits',
-        achievements: '🏆 Achievements',
-        settings: '⚙️ Settings',
-        save: '💾 Save'
-      }
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    // User data storage
+    let userData = {
+      id: null,
+      username: '',
+      first_name: '',
+      last_name: '',
+      photo_url: '',
+      orimori_xp: 0,
+      orimori_coins: 0,
+      level: 0,
+      display_name: '',
+      about_me: '',
+      custom_photo: '',
+      auth_time: new Date().toISOString()
     };
-
-    // Rank levels
-    const rankLevels = [
-      { xp: 0, level: 1, name: 'Новичок', icon: '🌟' },
-      { xp: 50, level: 2, name: 'Ученик Риса', icon: '🍙' },
-      { xp: 200, level: 3, name: 'Ролл-Воин', icon: '⚔️' },
-      { xp: 500, level: 4, name: 'Мастер Вкусов', icon: '👨‍🍳' },
-      { xp: 1000, level: 5, name: 'Хранитель Соуса', icon: '🏺' },
-      { xp: 2000, level: 6, name: 'Защитник Трезубца', icon: '🔱' },
-      { xp: Infinity, level: 7, name: 'Бог Вкусов', icon: '👑' } // top-10
-    ];
-
-    function getRankFromXP(xp) {
-      for (let i = rankLevels.length - 1; i >= 0; i--) {
-        if (xp >= rankLevels[i].xp) {
-          return rankLevels[i];
-        }
-      }
-      return rankLevels[0];
-    }
-
-    function getNextRank(currentXP) {
-      for (let i = 0; i < rankLevels.length - 1; i++) {
-        if (currentXP < rankLevels[i + 1].xp) {
-          return rankLevels[i + 1];
-        }
-      }
-      return rankLevels[rankLevels.length - 1];
-    }
-
-    function updateProgressRing(current, total) {
-      const circle = document.getElementById('progressCircle');
-      const radius = 82;
-      const circumference = radius * 2 * Math.PI;
-      const percent = Math.min((current / total) * 100, 100);
-      const offset = circumference - (percent / 100) * circumference;
-      
-      circle.style.strokeDasharray = `${circumference} ${circumference}`;
-      circle.style.strokeDashoffset = offset;
-    }
 
     // Check if viewing another user's profile
     const urlParams = new URLSearchParams(window.location.search);
-    const viewingUserId = urlParams.get('id');
+    let viewingUserId = urlParams.get('id');
     const isOwnProfile = !viewingUserId;
 
-    // Show settings button only on own profile
-    if (isOwnProfile) {
-      document.getElementById('settingsBtn').classList.remove('hidden');
+    // Helper functions
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
     }
 
-    // Load profile data
-    async function loadProfile() {
-      let userId;
+    function calculateLevel(xp) {
+      let level = 1;
+      while (xp >= level * level * 50) {
+        level++;
+      }
+      return level - 1;
+    }
+
+    function calculateNextLevelXP(level) {
+      return (level + 1) * (level + 1) * 50;
+    }
+
+    function getStatusEmoji(level) {
+      if (level < 5) return '🌱';
+      if (level < 10) return '🌿';
+      if (level < 20) return '🌳';
+      if (level < 30) return '⭐';
+      return '👑';
+    }
+
+    function getStatusName(level) {
+      if (level < 5) return 'Новичок';
+      if (level < 10) return 'Активный';
+      if (level < 20) return 'Эксперт';
+      if (level < 30) return 'Мастер';
+      return 'Легенда';
+    }
+
+    // Supabase API request
+    async function supabaseRequest(endpoint, method = 'GET', body = null) {
+      const options = {
+        method,
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        }
+      };
+
+      if (body) {
+        options.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, options);
       
-      if (viewingUserId) {
-        // Viewing another user's profile
-        userId = viewingUserId;
-      } else {
-        // Own profile - get from Telegram
-        try {
-          userId = Telegram.WebApp.initDataUnsafe.user.id;
-        } catch (e) {
-          console.error('Failed to get Telegram user ID:', e);
-          userId = 'demo_user'; // Fallback for testing
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      return method === 'DELETE' ? null : await response.json();
+    }
 
-      // Fetch user data from Supabase
+    // Load or create user profile
+    async function initUser() {
       try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('telegram_id', userId)
-          .single();
-
-        if (error) throw error;
-
-        if (data) {
-          // Update profile display
-          document.getElementById('profileName').textContent = data.display_name || 'Пайдаланушы';
-          document.getElementById('profileBio').textContent = data.bio || 'Профиль сипаттамасы';
+        let user;
+        
+        if (viewingUserId) {
+          // Viewing another user's profile by ID
+          user = { id: viewingUserId };
+        } else {
+          // Get current user from Telegram
+          user = tg.initDataUnsafe?.user;
           
-          if (data.photo_url) {
-            document.getElementById('profilePhoto').src = data.photo_url;
-          }
-
-          // Update stats
-          document.getElementById('statXP').textContent = data.xp || 0;
-          document.getElementById('statOrders').textContent = data.orders_count || 0;
-          document.getElementById('statFavorites').textContent = data.favorites_count || 0;
-          document.getElementById('statVisits').textContent = data.visits_count || 0;
-
-          // Update rank
-          const rank = getRankFromXP(data.xp || 0);
-          const nextRank = getNextRank(data.xp || 0);
-          
-          document.getElementById('rankIcon').textContent = rank.icon;
-          document.getElementById('rankText').textContent = `Level ${rank.level} - ${rank.name}`;
-
-          // Update progress ring
-          const currentXP = data.xp || 0;
-          const nextLevelXP = nextRank.xp === Infinity ? currentXP : nextRank.xp;
-          updateProgressRing(currentXP, nextLevelXP);
-
-          // If own profile, populate form
-          if (isOwnProfile) {
-            document.getElementById('nameInput').value = data.display_name || '';
-            document.getElementById('bioInput').value = data.bio || '';
-            if (data.photo_url) {
-              const preview = document.getElementById('photoPreview');
-              preview.src = data.photo_url;
-              preview.classList.add('visible');
-            }
+          if (!user?.id) {
+            throw new Error('Telegram user data not available');
           }
         }
+
+        // Fetch full user data
+        const fullData = await supabaseRequest(`users?id=eq.${user.id}&select=*`);
+        
+        if (fullData && fullData.length > 0) {
+          userData = {
+            ...userData,
+            ...fullData[0]
+          };
+        }
+
+        // Save to localStorage
+        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+        
+        return userData;
       } catch (error) {
-        console.error('Error loading profile:', error);
+        console.error('Supabase sync error:', error);
+        showToast('❌ Ошибка синхронизации с сервером');
+        
+        // Try to load from localStorage only if viewing own profile
+        if (!viewingUserId) {
+          const cached = localStorage.getItem('orimori_user_data');
+          if (cached) {
+            userData = JSON.parse(cached);
+            return userData;
+          }
+        }
+        
+        throw error;
       }
     }
 
-    // Popup handlers
-    document.getElementById('profileRank').addEventListener('click', () => {
-      document.getElementById('rankPopup').classList.add('active');
-    });
+    // Update profile in Supabase
+    async function updateProfile(updates) {
+      try {
+        await supabaseRequest(
+          `users?id=eq.${userData.id}`,
+          'PATCH',
+          updates
+        );
 
-    document.getElementById('rankPopupClose').addEventListener('click', () => {
-      document.getElementById('rankPopup').classList.remove('active');
-    });
-
-    document.getElementById('rankPopup').addEventListener('click', (e) => {
-      if (e.target.id === 'rankPopup') {
-        document.getElementById('rankPopup').classList.remove('active');
+        // Update local data
+        userData = { ...userData, ...updates };
+        localStorage.setItem('orimori_user_data', JSON.stringify(userData));
+        
+        showToast('✅ Профиль обновлен');
+        return true;
+      } catch (error) {
+        console.error('Profile update error:', error);
+        showToast('❌ Ошибка обновления профиля');
+        return false;
       }
-    });
+    }
 
-    // Settings popup
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-      document.getElementById('settingsPopup').classList.add('active');
-    });
+    // Update UI with user data
+    function updateUI() {
+      const level = calculateLevel(userData.orimori_xp);
+      const nextLevelXP = calculateNextLevelXP(level);
+      const currentLevelXP = level * level * 50;
+      const xpProgress = userData.orimori_xp - currentLevelXP;
+      const xpNeeded = nextLevelXP - currentLevelXP;
+      const progressPercent = (xpProgress / xpNeeded) * 100;
 
-    document.getElementById('settingsPopupClose').addEventListener('click', () => {
-      document.getElementById('settingsPopup').classList.remove('active');
-    });
+      // Update profile photo
+      const photoUrl = userData.custom_photo || userData.photo_url || 'https://via.placeholder.com/156';
+      document.getElementById('profilePhoto').src = photoUrl;
 
-    document.getElementById('settingsPopup').addEventListener('click', (e) => {
-      if (e.target.id === 'settingsPopup') {
-        document.getElementById('settingsPopup').classList.remove('active');
+      // Update display name
+      const displayName = userData.display_name || userData.first_name || 'User';
+      document.getElementById('displayName').textContent = displayName;
+
+      // Update username with clickable link
+      const usernameEl = document.getElementById('username');
+      if (userData.username) {
+        const username = `@${userData.username}`;
+        usernameEl.textContent = username;
+        usernameEl.style.cursor = 'pointer';
+        usernameEl.style.textDecoration = 'underline';
+        usernameEl.onclick = () => {
+          window.open(`https://t.me/${userData.username}`, '_blank');
+        };
+      } else {
+        usernameEl.textContent = `ID: ${userData.id}`;
+        usernameEl.style.cursor = 'default';
+        usernameEl.style.textDecoration = 'none';
+        usernameEl.onclick = null;
       }
-    });
 
-    // Photo upload
+      // Update XP and Level badges
+      document.getElementById('xpBadge').textContent = `${userData.orimori_xp} XP`;
+      document.getElementById('levelBadge').textContent = `LVL ${level}`;
+
+      // Update progress ring
+      const circle = document.getElementById('progressCircle');
+      const radius = 82;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (progressPercent / 100) * circumference;
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = offset;
+
+      // Update stats
+      document.getElementById('statLevel').textContent = level;
+      document.getElementById('statXP').textContent = userData.orimori_xp;
+      document.getElementById('statCoins').textContent = userData.orimori_coins || 0;
+
+      // Update status
+      const statusEmoji = getStatusEmoji(level);
+      const statusName = getStatusName(level);
+      document.getElementById('userStatus').textContent = `${statusEmoji} ${statusName}`;
+
+      // Update about me
+      const aboutMe = userData.about_me || 'Информация не указана';
+      document.getElementById('aboutMeDisplay').textContent = aboutMe;
+
+      // Show/hide edit section based on whether it's own profile
+      const editSection = document.getElementById('editSection');
+      if (isOwnProfile) {
+        editSection.style.display = 'block';
+        
+        // Pre-fill edit form
+        document.getElementById('editDisplayName').value = userData.display_name || '';
+        document.getElementById('editAboutMe').value = userData.about_me || '';
+        
+        if (userData.custom_photo) {
+          const preview = document.getElementById('photoPreview');
+          preview.src = userData.custom_photo;
+          preview.classList.add('visible');
+          document.getElementById('uploadText').style.display = 'none';
+        }
+      } else {
+        editSection.style.display = 'none';
+      }
+
+      // Show content, hide loading
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('profileContent').classList.remove('hidden');
+    }
+
+    // Photo upload handler
     document.getElementById('photoUploadArea').addEventListener('click', () => {
-      document.getElementById('photoInput').click();
+      if (isOwnProfile) {
+        document.getElementById('photoInput').click();
+      }
     });
 
     document.getElementById('photoInput').addEventListener('change', (e) => {
@@ -1011,118 +787,57 @@
           const preview = document.getElementById('photoPreview');
           preview.src = e.target.result;
           preview.classList.add('visible');
+          document.getElementById('uploadText').style.display = 'none';
         };
         reader.readAsDataURL(file);
       }
     });
 
-    // Language selector
-    document.querySelectorAll('.language-flag').forEach(flag => {
-      flag.addEventListener('click', () => {
-        document.querySelectorAll('.language-flag').forEach(f => f.classList.remove('active'));
-        flag.classList.add('active');
-        const lang = flag.dataset.lang;
-        localStorage.setItem('language', lang);
-        // Apply translations here if needed
-      });
-    });
-
-    // Theme toggle
-    document.querySelectorAll('.theme-option').forEach(option => {
-      option.addEventListener('click', () => {
-        document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
-        option.classList.add('active');
-        const theme = option.dataset.theme;
-        
-        if (theme === 'dark') {
-          document.body.classList.add('dark');
-        } else {
-          document.body.classList.remove('dark');
-        }
-        
-        localStorage.setItem('theme', theme);
-      });
-    });
-
-    // Save settings
-    document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
-      const name = document.getElementById('nameInput').value;
-      const bio = document.getElementById('bioInput').value;
-      const photoFile = document.getElementById('photoInput').files[0];
-
-      try {
-        let userId;
-        try {
-          userId = Telegram.WebApp.initDataUnsafe.user.id;
-        } catch (e) {
-          userId = 'demo_user';
-        }
-
-        let photoUrl = null;
-        
-        // Upload photo if selected
-        if (photoFile) {
-          const fileExt = photoFile.name.split('.').pop();
-          const fileName = `${userId}-${Date.now()}.${fileExt}`;
-          
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('profile-photos')
-            .upload(fileName, photoFile);
-
-          if (uploadError) throw uploadError;
-
-          const { data: urlData } = supabase.storage
-            .from('profile-photos')
-            .getPublicUrl(fileName);
-          
-          photoUrl = urlData.publicUrl;
-        }
-
-        // Update user data
-        const updateData = {
-          display_name: name,
-          bio: bio
+    // Save profile changes
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+      const displayName = document.getElementById('editDisplayName').value.trim();
+      const aboutMe = document.getElementById('editAboutMe').value.trim();
+      const photoInput = document.getElementById('photoInput');
+      
+      const updates = {};
+      
+      if (displayName) {
+        updates.display_name = displayName;
+      }
+      
+      if (aboutMe) {
+        updates.about_me = aboutMe;
+      }
+      
+      // Handle photo if selected
+      if (photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          updates.custom_photo = e.target.result;
+          const success = await updateProfile(updates);
+          if (success) {
+            updateUI();
+          }
         };
-
-        if (photoUrl) {
-          updateData.photo_url = photoUrl;
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        const success = await updateProfile(updates);
+        if (success) {
+          updateUI();
         }
-
-        const { error } = await supabase
-          .from('users')
-          .update(updateData)
-          .eq('telegram_id', userId);
-
-        if (error) throw error;
-
-        // Close popup and reload
-        document.getElementById('settingsPopup').classList.remove('active');
-        await loadProfile();
-        
-        alert('Баптаулар сақталды!');
-      } catch (error) {
-        console.error('Error saving settings:', error);
-        alert('Қате орын алды!');
       }
     });
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark');
-      document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
-      document.querySelector('[data-theme="dark"]').classList.add('active');
-    }
-
-    // Load saved language
-    const savedLang = localStorage.getItem('language');
-    if (savedLang) {
-      document.querySelectorAll('.language-flag').forEach(f => f.classList.remove('active'));
-      document.querySelector(`[data-lang="${savedLang}"]`)?.classList.add('active');
-    }
-
     // Initialize
-    loadProfile();
+    (async () => {
+      try {
+        await initUser();
+        updateUI();
+      } catch (error) {
+        console.error('Initialization error:', error);
+        document.getElementById('loading').innerHTML = '<p>❌ Ошибка загрузки профиля</p>';
+      }
+    })();
   </script>
 </body>
 </html>
