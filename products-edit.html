@@ -802,7 +802,8 @@
           description: document.getElementById('product-description').value,
           price: parseInt(document.getElementById('product-price').value),
           category_id: parseInt(document.getElementById('product-category').value),
-          images: uploadedImages
+          images: uploadedImages,
+          user_id: currentUserId
         }]);
 
         if (error) throw error;
@@ -827,7 +828,8 @@
       
       try {
         const { error } = await supabase.from('categories').insert([{
-          name: document.getElementById('category-name').value
+          name: document.getElementById('category-name').value,
+          user_id: currentUserId
         }]);
 
         if (error) throw error;
