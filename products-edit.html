@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Управление товарами - OriMori</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0;
@@ -140,26 +139,24 @@
       display: flex;
       gap: 0.5rem;
       box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
-      animation: fadeInUp 0.7s ease-out 0.1s backwards;
     }
 
     .tab {
       flex: 1;
-      padding: 0.875rem 1.5rem;
-      background: transparent;
+      padding: 0.75rem 1rem;
       border: none;
-      border-radius: 0.75rem;
-      font-size: 1rem;
+      background: transparent;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      color: hsl(25, 15%, 20%);
+      color: hsl(25, 10%, 45%);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
     .tab.active {
       background: hsl(142, 76%, 36%);
       color: white;
-      box-shadow: 0 4px 12px hsla(142, 76%, 36%, 0.3);
     }
 
     .tab-content {
@@ -171,104 +168,84 @@
       display: block;
     }
 
-    .card {
+    .form-card {
       background: white;
-      border-radius: 1.25rem;
+      border-radius: 1.5rem;
       padding: 2rem;
       box-shadow: 0 4px 20px -4px rgba(60, 45, 40, 0.08);
-      margin-bottom: 1.5rem;
-    }
-
-    .card h2 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: hsl(25, 15%, 20%);
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
-    .form-group label {
+    label {
       display: block;
       font-weight: 600;
-      color: hsl(25, 15%, 20%);
       margin-bottom: 0.5rem;
+      color: hsl(25, 15%, 20%);
       font-size: 0.875rem;
     }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
       width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid hsl(25, 10%, 85%);
+      padding: 0.875rem 1rem;
+      border: 1px solid hsl(25, 10%, 85%);
       border-radius: 0.75rem;
       font-size: 1rem;
-      font-family: inherit;
-      transition: border-color 0.3s;
+      transition: all 0.2s;
       background: white;
+      font-family: inherit;
     }
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
       outline: none;
       border-color: hsl(142, 76%, 36%);
       box-shadow: 0 0 0 3px hsla(142, 76%, 36%, 0.1);
     }
 
-    .form-group textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-
-    .upload-area {
+    .image-upload-area {
       border: 2px dashed hsl(25, 10%, 85%);
       border-radius: 0.75rem;
       padding: 2rem;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
-    .upload-area:hover {
+    .image-upload-area:hover {
       border-color: hsl(142, 76%, 36%);
-      background: hsl(35, 30%, 98%);
+      background: hsl(142, 76%, 98%);
     }
 
-    .upload-area svg {
-      width: 3rem;
-      height: 3rem;
-      color: hsl(25, 10%, 45%);
-      margin-bottom: 0.5rem;
-    }
-
-    .upload-area p {
-      font-size: 0.875rem;
-      color: hsl(25, 10%, 45%);
+    .image-upload-area input {
+      display: none;
     }
 
     .image-previews {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
       margin-top: 1rem;
     }
 
     .preview-item {
       position: relative;
-      border-radius: 0.75rem;
+      aspect-ratio: 1;
+      border-radius: 0.5rem;
       overflow: hidden;
       border: 2px solid hsl(25, 10%, 85%);
-      aspect-ratio: 1;
     }
 
     .preview-item img {
@@ -281,53 +258,42 @@
       position: absolute;
       top: 0.25rem;
       right: 0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
       background: hsl(0, 84%, 60%);
       color: white;
       border: none;
       border-radius: 50%;
-      width: 1.5rem;
-      height: 1.5rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      line-height: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .preview-item:hover .preview-remove {
-      opacity: 1;
     }
 
     .items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      display: grid;
+      gap: 1rem;
     }
 
     .item-card {
-      background: hsl(35, 20%, 96%);
-      border-radius: 0.75rem;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      border: 2px solid transparent;
-      transition: all 0.3s;
-    }
-
-    .item-card:hover {
-      border-color: hsl(142, 76%, 36%);
       background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px -2px rgba(60, 45, 40, 0.08);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
     }
 
     .item-image {
-      width: 4rem;
-      height: 4rem;
+      width: 80px;
+      height: 80px;
       border-radius: 0.5rem;
-      background: white;
       overflow: hidden;
       flex-shrink: 0;
+      background: hsl(35, 30%, 95%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -340,97 +306,63 @@
     }
 
     .item-image svg {
-      width: 1.5rem;
-      height: 1.5rem;
-      color: hsl(25, 10%, 45%);
+      width: 40px;
+      height: 40px;
+      color: hsl(25, 10%, 70%);
     }
 
     .item-info {
       flex: 1;
-      min-width: 0;
     }
 
     .item-info h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: hsl(25, 15%, 20%);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 1.1rem;
       margin-bottom: 0.25rem;
     }
 
     .item-info p {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       color: hsl(25, 10%, 45%);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-bottom: 0.25rem;
     }
 
     .item-price {
-      font-size: 0.875rem;
-      font-weight: bold;
-      color: hsl(350, 75%, 58%);
-    }
-
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 50vh;
-    }
-
-    .spinner {
-      border: 3px solid hsl(35, 20%, 90%);
-      border-top: 3px solid hsl(142, 76%, 36%);
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      font-weight: 600;
+      color: hsl(142, 76%, 36%);
+      font-size: 1rem !important;
     }
 
     .empty-message {
       text-align: center;
       padding: 3rem;
       color: hsl(25, 10%, 45%);
+      font-size: 1.1rem;
     }
 
     .toast {
       position: fixed;
-      top: 2rem;
+      bottom: 2rem;
       right: 2rem;
       background: white;
       padding: 1rem 1.5rem;
       border-radius: 0.75rem;
-      box-shadow: 0 8px 30px -4px rgba(60, 45, 40, 0.15);
-      z-index: 1000;
-      animation: slideIn 0.3s ease-out;
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
       display: flex;
+      gap: 1rem;
       align-items: center;
-      gap: 0.75rem;
-      min-width: 300px;
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+      max-width: 400px;
     }
 
     @keyframes slideIn {
       from {
-        transform: translateX(400px);
-        opacity: 0;
+        transform: translateX(100%);
       }
       to {
         transform: translateX(0);
-        opacity: 1;
       }
     }
-
-    .toast.success { border-left: 4px solid hsl(142, 76%, 36%); }
-    .toast.error { border-left: 4px solid hsl(0, 84%, 60%); }
-    .toast.info { border-left: 4px solid hsl(210, 100%, 50%); }
 
     .toast-icon {
       font-size: 1.5rem;
@@ -446,34 +378,26 @@
     }
 
     .toast-message {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       color: hsl(25, 10%, 45%);
     }
 
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .toast.success .toast-icon { color: hsl(142, 76%, 36%); }
+    .toast.error .toast-icon { color: hsl(0, 84%, 60%); }
+    .toast.info .toast-icon { color: hsl(210, 80%, 50%); }
   </style>
 </head>
 <body>
   <div class="rice-pattern"></div>
-  
+
   <div class="container">
-    <header class="header">
+    <div class="header">
       <div>
         <h1>Управление товарами</h1>
-        <p>OriMori Admin</p>
+        <p>Добавление и редактирование товаров и категорий</p>
       </div>
-      <a href="/products.html" class="btn btn-outline">Каталог</a>
-    </header>
+      <a href="/" class="btn btn-outline">← Назад</a>
+    </div>
 
     <div class="tabs">
       <button class="tab active" onclick="switchTab('products')">Товары</button>
@@ -482,206 +406,412 @@
 
     <!-- Products Tab -->
     <div id="products-tab" class="tab-content active">
-      <div class="card">
-        <h2>Добавить товар</h2>
+      <div class="form-card">
+        <h2 style="margin-bottom: 1.5rem;">Добавить товар</h2>
         <form id="product-form">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="product-name">Название</label>
-              <input type="text" id="product-name" required>
-            </div>
-            <div class="form-group">
-              <label for="product-price">Цена (₸)</label>
-              <input type="number" id="product-price" required>
-            </div>
-          </div>
-          
           <div class="form-group">
-            <label for="product-category">Категория</label>
+            <label for="product-name">Название товара *</label>
+            <input type="text" id="product-name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="product-description">Описание</label>
+            <textarea id="product-description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="product-price">Цена (₸) *</label>
+            <input type="number" id="product-price" required min="0">
+          </div>
+
+          <div class="form-group">
+            <label for="product-category">Категория *</label>
             <select id="product-category" required>
               <option value="">Выберите категорию</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="product-description">Описание</label>
-            <textarea id="product-description" required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Изображения</label>
-            <input type="file" id="product-images" accept="image/*" multiple style="display: none;">
-            <div class="upload-area" onclick="document.getElementById('product-images').click()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
+            <label>Фотографии товара</label>
+            <div class="image-upload-area" onclick="document.getElementById('product-images').click()">
+              <input type="file" id="product-images" multiple accept="image/*">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
               </svg>
-              <p>Нажмите для выбора изображений</p>
+              <p>Нажмите для выбора фото</p>
             </div>
             <div id="image-previews" class="image-previews"></div>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%;" id="product-submit-btn">
-            Добавить товар
-          </button>
+          <button type="submit" class="btn btn-primary" id="product-submit-btn">Добавить товар</button>
         </form>
       </div>
 
-      <div class="card">
-        <h2>Список товаров</h2>
-        <div id="products-list">
-          <div class="loading"><div class="spinner"></div></div>
-        </div>
+      <div class="form-card">
+        <h2 style="margin-bottom: 1.5rem;">Список товаров</h2>
+        <div id="products-list"></div>
       </div>
     </div>
 
     <!-- Categories Tab -->
     <div id="categories-tab" class="tab-content">
-      <div class="card">
-        <h2>Добавить категорию</h2>
+      <div class="form-card">
+        <h2 style="margin-bottom: 1.5rem;">Добавить категорию</h2>
         <form id="category-form">
           <div class="form-group">
-            <label for="category-name">Название категории</label>
+            <label for="category-name">Название категории *</label>
             <input type="text" id="category-name" required>
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%;">
-            Добавить категорию
-          </button>
+
+          <button type="submit" class="btn btn-primary" id="category-submit-btn">Добавить категорию</button>
         </form>
       </div>
 
-      <div class="card">
-        <h2>Список категорий</h2>
-        <div id="categories-list">
-          <div class="loading"><div class="spinner"></div></div>
-        </div>
+      <div class="form-card">
+        <h2 style="margin-bottom: 1.5rem;">Список категорий</h2>
+        <div id="categories-list"></div>
       </div>
     </div>
   </div>
 
   <script>
-const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
+    const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
 
-let selectedFiles = [];
-let editMode = false;
-let editId = null;
+    let products = [];
+    let categories = [];
+    let selectedFiles = [];
 
-// Проверка редактирования через URL
-const urlParams = new URLSearchParams(window.location.search);
-editId = urlParams.get('id');
-editMode = !!editId;
-
-// Toast
-function showToast(title, description, type='success') {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastTitle').textContent = title;
-  document.getElementById('toastDescription').textContent = description;
-  toast.className = `toast ${type} show`;
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// Превью изображений
-document.getElementById('product-images').addEventListener('change', (e) => {
-  selectedFiles = Array.from(e.target.files);
-  renderImagePreviews();
-});
-
-function renderImagePreviews() {
-  const container = document.getElementById('image-previews');
-  container.innerHTML = '';
-  selectedFiles.forEach((file, idx) => {
-    const reader = new FileReader();
-    reader.onload = e => {
+    function escapeHtml(text) {
+      if (!text) return '';
       const div = document.createElement('div');
-      div.className = 'preview-item';
-      div.innerHTML = `<img src="${e.target.result}" alt="Preview"><button type="button" class="preview-remove" onclick="removeImage(${idx})">×</button>`;
-      container.appendChild(div);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function removeImage(idx) {
-  selectedFiles.splice(idx,1);
-  renderImagePreviews();
-}
-
-// Загрузка категорий
-async function loadCategories() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await res.json();
-    const select = document.getElementById('product-category');
-    data.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat.id;
-      opt.textContent = cat.name;
-      select.appendChild(opt);
-    });
-  } catch(err) {
-    showToast('Ошибка','Не удалось загрузить категории','error');
-  }
-}
-
-// Submit
-document.getElementById('product-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const submitBtn = document.getElementById('product-submit-btn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Загрузка...';
-
-  try {
-    const images = [];
-    for (const file of selectedFiles) {
-      const reader = new FileReader();
-      await new Promise(res => reader.onload = () => { images.push(reader.result); res() }); 
-      reader.readAsDataURL(file);
+      div.textContent = text;
+      return div.innerHTML;
     }
 
-    const formData = {
-      name: document.getElementById('product-name').value,
-      description: document.getElementById('product-description').value,
-      price: parseInt(document.getElementById('product-price').value),
-      category_id: parseInt(document.getElementById('product-category').value),
-      images: images
-    };
+    function showToast(type, title, message) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const icons = { success: '✓', error: '✕', info: 'ℹ' };
+      
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease-out reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
 
-    const url = editMode ? `${SUPABASE_URL}/rest/v1/products?id=eq.${editId}` : `${SUPABASE_URL}/rest/v1/products`;
-    const method = editMode ? 'PATCH' : 'POST';
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`${tab}-tab`).classList.add('active');
+    }
 
-    const res = await fetch(url, {
-      method: method,
-      headers: { 
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(editMode ? [formData] : formData)
+    document.getElementById('product-images').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      selectedFiles = [...selectedFiles, ...files];
+      renderImagePreviews();
     });
 
-    if (!res.ok) throw new Error('Ошибка при сохранении товара');
+    function renderImagePreviews() {
+      const container = document.getElementById('image-previews');
+      container.innerHTML = '';
+      
+      selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview ${index + 1}">
+            <button type="button" class="preview-remove" onclick="removeImage(${index})">×</button>
+          `;
+          container.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
-    showToast('Успешно','Товар сохранен','success');
-    setTimeout(() => window.location.href='product.html', 1000);
+    function removeImage(index) {
+      selectedFiles.splice(index, 1);
+      renderImagePreviews();
+    }
 
-  } catch(err) {
-    showToast('Ошибка',err.message,'error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Сохранить';
-  }
-});
+    async function getImagesBase64() {
+      if (selectedFiles.length === 0) return [];
 
-// Инициализация
-window.addEventListener('load', () => {
-  loadCategories();
-});
-</script>
+      const base64Images = [];
+      
+      for (const file of selectedFiles) {
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+        base64Images.push(base64);
+      }
+
+      return base64Images;
+    }
+
+    async function loadData() {
+      try {
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=created_at.desc`, {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+          }),
+          fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=name`, {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+          })
+        ]);
+
+        if (!productsRes.ok || !categoriesRes.ok) {
+          throw new Error('Ошибка загрузки данных');
+        }
+
+        products = await productsRes.json();
+        categories = await categoriesRes.json();
+
+        renderProducts();
+        renderCategories();
+        updateCategorySelect();
+      } catch (error) {
+        console.error('Ошибка загрузки:', error);
+        showToast('error', 'Ошибка', 'Не удалось загрузить данные');
+      }
+    }
+
+    function updateCategorySelect() {
+      const select = document.getElementById('product-category');
+      select.innerHTML = '<option value="">Выберите категорию</option>';
+      categories.forEach(cat => {
+        select.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`;
+      });
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('products-list');
+      
+      if (products.length === 0) {
+        container.innerHTML = '<div class="empty-message">Товары не найдены</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="items-list">
+          ${products.map(product => `
+            <div class="item-card">
+              <div class="item-image">
+                ${product.images && product.images.length > 0 
+                  ? `<img src="${product.images[0]}" alt="${escapeHtml(product.name)}">` 
+                  : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                       <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                       <polyline points="21 15 16 10 5 21"></polyline>
+                     </svg>`
+                }
+              </div>
+              <div class="item-info">
+                <h3>${escapeHtml(product.name)}</h3>
+                <p>${escapeHtml(product.description || '')}</p>
+                <p class="item-price">${product.price} ₸</p>
+              </div>
+              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories-list');
+      
+      if (categories.length === 0) {
+        container.innerHTML = '<div class="empty-message">Категории не найдены</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="items-list">
+          ${categories.map(category => `
+            <div class="item-card">
+              <div class="item-info">
+                <h3>${escapeHtml(category.name)}</h3>
+              </div>
+              <button class="btn btn-danger" onclick="deleteCategory(${category.id})">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    document.getElementById('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('product-submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Загрузка...';
+
+      try {
+        const uploadedImages = await getImagesBase64();
+
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            name: document.getElementById('product-name').value,
+            description: document.getElementById('product-description').value || null,
+            price: parseInt(document.getElementById('product-price').value),
+            category_id: parseInt(document.getElementById('product-category').value),
+            images: uploadedImages
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Ошибка при добавлении товара');
+        }
+
+        showToast('success', 'Успешно', 'Товар добавлен!');
+        e.target.reset();
+        selectedFiles = [];
+        renderImagePreviews();
+        await loadData();
+      } catch (error) {
+        console.error('Ошибка:', error);
+        showToast('error', 'Ошибка', error.message || 'Не удалось добавить товар');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+
+    document.getElementById('category-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('category-submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Загрузка...';
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            name: document.getElementById('category-name').value
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Ошибка при добавлении категории');
+        }
+
+        showToast('success', 'Успешно', 'Категория добавлена!');
+        e.target.reset();
+        await loadData();
+      } catch (error) {
+        console.error('Ошибка:', error);
+        showToast('error', 'Ошибка', error.message || 'Не удалось добавить категорию');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+
+    async function deleteProduct(id) {
+      if (!confirm('Вы уверены, что хотите удалить этот товар?')) return;
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
+          method: 'DELETE',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Ошибка при удалении товара');
+        }
+
+        showToast('success', 'Успешно', 'Товар удален!');
+        await loadData();
+      } catch (error) {
+        console.error('Ошибка:', error);
+        showToast('error', 'Ошибка', 'Не удалось удалить товар');
+      }
+    }
+
+    async function deleteCategory(id) {
+      if (!confirm('Вы уверены, что хотите удалить эту категорию?')) return;
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?id=eq.${id}`, {
+          method: 'DELETE',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Ошибка при удалении категории');
+        }
+
+        showToast('success', 'Успешно', 'Категория удалена!');
+        await loadData();
+      } catch (error) {
+        console.error('Ошибка:', error);
+        showToast('error', 'Ошибка', 'Не удалось удалить категорию');
+      }
+    }
+
+    window.addEventListener('load', () => {
+      loadData();
+    });
+  </script>
 </body>
 </html>
