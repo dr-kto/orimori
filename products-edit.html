@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORIMORI - Управление товарами</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+    }
+
+    .header img {
+      height: 80px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      background: white;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #667eea;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .content {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .items-list {
+      margin-top: 30px;
+    }
+
+    .item-card {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 2px solid #e5e7eb;
+    }
+
+    .item-info h3 {
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .item-info p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .product-images {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .product-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .images-input-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .image-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .image-input-row input {
+      flex: 1;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .message.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="images/orimori-logo.png" alt="ORIMORI">
+      <h1>Управление товарами</h1>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('categories')">Категории</button>
+      <button class="tab" onclick="switchTab('products')">Товары</button>
+    </div>
+
+    <div id="message" class="message hidden"></div>
+
+    <!-- Categories Tab -->
+    <div id="categoriesTab" class="content">
+      <h2>Добавить категорию</h2>
+      <form id="categoryForm">
+        <div class="form-group">
+          <label>Название категории</label>
+          <input type="text" id="categoryName" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить категорию</button>
+      </form>
+
+      <div class="items-list" id="categoriesList"></div>
+    </div>
+
+    <!-- Products Tab -->
+    <div id="productsTab" class="content hidden">
+      <h2>Добавить товар</h2>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        
+        <div class="form-group">
+          <label>Название товара</label>
+          <input type="text" id="productName" required>
+        </div>
+
+        <div class="form-group">
+          <label>Описание</label>
+          <textarea id="productDescription" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Цена (₸)</label>
+          <input type="number" id="productPrice" required min="0">
+        </div>
+
+        <div class="form-group">
+          <label>Категория</label>
+          <select id="productCategory" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Изображения (пути к файлам)</label>
+          <div id="imagesContainer" class="images-input-container">
+            <div class="image-input-row">
+              <input type="text" placeholder="images/product.png" class="image-input">
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-small" onclick="addImageInput()" style="margin-top: 10px;">Добавить изображение</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить товар</button>
+        <button type="button" class="btn btn-danger" onclick="resetProductForm()" style="margin-left: 10px;">Отмена</button>
+      </form>
+
+      <div class="items-list" id="productsList"></div>
+    </div>
+  </div>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "https://gierevxpvsajtjdwethi.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZXJldnhwdnNhanRqZHdldGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTUzNzQsImV4cCI6MjA3ODg5MTM3NH0.LiVkWMW3MxPkGLhCYh5X8PrkBtWdYSn_nlgoUxrk-F8";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let categories = [];
+    let products = [];
+    let currentTab = 'categories';
+
+    // Initialize
+    async function init() {
+      await loadCategories();
+      await loadProducts();
+      renderCategories();
+      renderProducts();
+    }
+
+    // Switch tabs
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.getElementById('categoriesTab').classList.toggle('hidden', tab !== 'categories');
+      document.getElementById('productsTab').classList.toggle('hidden', tab !== 'products');
+    }
+
+    // Load categories
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('id');
+      
+      if (error) {
+        showMessage('Ошибка загрузки категорий: ' + error.message, 'error');
+        return;
+      }
+      
+      categories = data || [];
+      updateCategorySelect();
+    }
+
+    // Update category select
+    function updateCategorySelect() {
+      const select = document.getElementById('productCategory');
+      select.innerHTML = '<option value="">Выберите категорию</option>' +
+        categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+    }
+
+    // Load products
+    async function loadProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*, categories(name)')
+        .order('id');
+      
+      if (error) {
+        showMessage('Ошибка загрузки товаров: ' + error.message, 'error');
+        return;
+      }
+      
+      products = data || [];
+    }
+
+    // Render categories
+    function renderCategories() {
+      const list = document.getElementById('categoriesList');
+      list.innerHTML = '<h3 style="margin-bottom: 20px;">Список категорий</h3>' +
+        categories.map(cat => `
+          <div class="item-card">
+            <div class="item-info">
+              <h3>${cat.name}</h3>
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-danger btn-small" onclick="deleteCategory(${cat.id})">Удалить</button>
+            </div>
+          </div>
+        `).join('');
+    }
+
+    // Render products
+    function renderProducts() {
+      const list = document.getElementById('productsList');
+      list.innerHTML = '<h3 style="margin-bottom: 20px;">Список товаров</h3>' +
+        products.map(prod => `
+          <div class="item-card">
+            <div class="item-info">
+              <h3>${prod.name}</h3>
+              <p>${prod.description}</p>
+              <p><strong>${prod.price} ₸</strong> | Категория: ${prod.categories?.name || 'Без категории'}</p>
+              <div class="product-images">
+                ${(prod.images || []).map(img => `<img src="${img}" class="product-image" alt="${prod.name}">`).join('')}
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-primary btn-small" onclick="editProduct(${prod.id})">Редактировать</button>
+              <button class="btn btn-danger btn-small" onclick="deleteProduct(${prod.id})">Удалить</button>
+            </div>
+          </div>
+        `).join('');
+    }
+
+    // Category form submit
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('categoryName').value.trim();
+      
+      const { error } = await supabase
+        .from('categories')
+        .insert([{ name }]);
+      
+      if (error) {
+        showMessage('Ошибка добавления категории: ' + error.message, 'error');
+        return;
+      }
+      
+      showMessage('Категория успешно добавлена!', 'success');
+      document.getElementById('categoryForm').reset();
+      await loadCategories();
+      renderCategories();
+    });
+
+    // Delete category
+    async function deleteCategory(id) {
+      if (!confirm('Удалить эту категорию? Все товары в ней также будут удалены.')) return;
+      
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        showMessage('Ошибка удаления категории: ' + error.message, 'error');
+        return;
+      }
+      
+      showMessage('Категория удалена!', 'success');
+      await loadCategories();
+      await loadProducts();
+      renderCategories();
+      renderProducts();
+    }
+
+    // Product form submit
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = document.getElementById('productId').value;
+      const name = document.getElementById('productName').value.trim();
+      const description = document.getElementById('productDescription').value.trim();
+      const price = parseInt(document.getElementById('productPrice').value);
+      const category_id = parseInt(document.getElementById('productCategory').value);
+      
+      const imageInputs = document.querySelectorAll('.image-input');
+      const images = Array.from(imageInputs)
+        .map(input => input.value.trim())
+        .filter(val => val !== '');
+      
+      const productData = {
+        name,
+        description,
+        price,
+        category_id,
+        images
+      };
+      
+      let error;
+      if (id) {
+        // Update
+        ({ error } = await supabase
+          .from('products')
+          .update(productData)
+          .eq('id', id));
+      } else {
+        // Insert
+        ({ error } = await supabase
+          .from('products')
+          .insert([productData]));
+      }
+      
+      if (error) {
+        showMessage('Ошибка сохранения товара: ' + error.message, 'error');
+        return;
+      }
+      
+      showMessage(id ? 'Товар обновлён!' : 'Товар добавлен!', 'success');
+      resetProductForm();
+      await loadProducts();
+      renderProducts();
+    });
+
+    // Edit product
+    function editProduct(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      
+      document.getElementById('productId').value = product.id;
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productDescription').value = product.description;
+      document.getElementById('productPrice').value = product.price;
+      document.getElementById('productCategory').value = product.category_id;
+      
+      // Set images
+      const container = document.getElementById('imagesContainer');
+      container.innerHTML = '';
+      (product.images || ['']).forEach((img, i) => {
+        const row = document.createElement('div');
+        row.className = 'image-input-row';
+        row.innerHTML = `<input type="text" value="${img}" placeholder="images/product.png" class="image-input">`;
+        container.appendChild(row);
+      });
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Delete product
+    async function deleteProduct(id) {
+      if (!confirm('Удалить этот товар?')) return;
+      
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        showMessage('Ошибка удаления товара: ' + error.message, 'error');
+        return;
+      }
+      
+      showMessage('Товар удалён!', 'success');
+      await loadProducts();
+      renderProducts();
+    }
+
+    // Reset product form
+    function resetProductForm() {
+      document.getElementById('productForm').reset();
+      document.getElementById('productId').value = '';
+      document.getElementById('imagesContainer').innerHTML = `
+        <div class="image-input-row">
+          <input type="text" placeholder="images/product.png" class="image-input">
+        </div>
+      `;
+    }
+
+    // Add image input
+    function addImageInput() {
+      const container = document.getElementById('imagesContainer');
+      const row = document.createElement('div');
+      row.className = 'image-input-row';
+      row.innerHTML = `<input type="text" placeholder="images/product.png" class="image-input">`;
+      container.appendChild(row);
+    }
+
+    // Show message
+    function showMessage(text, type) {
+      const message = document.getElementById('message');
+      message.textContent = text;
+      message.className = `message ${type}`;
+      message.classList.remove('hidden');
+      
+      setTimeout(() => {
+        message.classList.add('hidden');
+      }, 5000);
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог товаров - ORIMORI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding: 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: hsl(350, 75%, 58%);
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      background: hsl(350, 75%, 58%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .cart-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(232, 53, 78, 0.3);
+    }
+
+    .cart-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff6b35;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category-section {
+      margin-bottom: 60px;
+    }
+
+    .category-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      padding-left: 10px;
+      border-left: 4px solid hsl(350, 75%, 58%);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .product-image-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      background: #f8f9fa;
+    }
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.5s ease;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .product-description {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .product-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(350, 75%, 58%);
+      margin-bottom: 15px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: hsl(350, 75%, 58%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: hsl(350, 75%, 50%);
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    .btn-secondary:hover {
+      background: #d5dbdb;
+    }
+
+    /* Modal/Popup styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0,0,0,0.1);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(0,0,0,0.2);
+      transform: rotate(90deg);
+    }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: #f8f9fa;
+    }
+
+    .carousel-container {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-slide img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .carousel-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-dot.active {
+      background: white;
+      width: 30px;
+      border-radius: 5px;
+    }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .carousel-arrow:hover {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .carousel-arrow.prev {
+      left: 20px;
+    }
+
+    .carousel-arrow.next {
+      right: 20px;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .modal-product-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .modal-product-description {
+      font-size: 16px;
+      color: #7f8c8d;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .modal-product-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: hsl(350, 75%, 58%);
+      margin-bottom: 20px;
+    }
+
+    /* Cart Modal */
+    .cart-modal .modal-content {
+      max-width: 500px;
+    }
+
+    .cart-header {
+      padding: 30px;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    .cart-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .cart-items {
+      padding: 20px 30px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .cart-item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .cart-item-price {
+      font-size: 14px;
+      color: hsl(350, 75%, 58%);
+      font-weight: 600;
+    }
+
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .quantity-btn:hover {
+      background: hsl(350, 75%, 58%);
+      color: white;
+    }
+
+    .quantity {
+      font-weight: 600;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .remove-btn {
+      margin-left: auto;
+      padding: 6px 12px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+
+    .cart-footer {
+      padding: 20px 30px;
+      border-top: 1px solid #ecf0f1;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+    }
+
+    /* Order Form */
+    .order-form {
+      padding: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #ecf0f1;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: hsl(350, 75%, 58%);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .carousel {
+        height: 300px;
+      }
+
+      .modal-content {
+        max-width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <img src="images/orimori-logo.png" alt="ORIMORI" style="height: 60px;">
+    </div>
+    <div class="cart-icon" onclick="openCart()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <div class="cart-count" id="cartCount">0</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Онигири Section -->
+    <div class="category-section">
+      <h2 class="category-title">Треугольный онигири</h2>
+      <div class="products-grid" id="onigiriGrid"></div>
+    </div>
+
+    <!-- Суши-бургер Section -->
+    <div class="category-section">
+      <h2 class="category-title">Суши-бургер</h2>
+      <div class="products-grid" id="sushiburgerGrid"></div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+      <div class="carousel" id="productCarousel">
+        <button class="carousel-arrow prev" onclick="prevSlide()">‹</button>
+        <div class="carousel-container" id="carouselContainer"></div>
+        <button class="carousel-arrow next" onclick="nextSlide()">›</button>
+        <div class="carousel-controls" id="carouselControls"></div>
+      </div>
+      <div class="modal-body">
+        <h2 class="modal-product-name" id="modalProductName"></h2>
+        <p class="modal-product-description" id="modalProductDescription"></p>
+        <div class="modal-product-price" id="modalProductPrice"></div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="addToCartFromModal()">
+          Добавить в корзину
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal cart-modal" id="cartModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeCart()">✕</button>
+      <div class="cart-header">
+        <h2 class="cart-title">Корзина</h2>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Итого:</span>
+          <span id="cartTotalPrice">0 ₸</span>
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="openOrderForm()">
+          Оформить заказ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Form Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeOrderForm()">✕</button>
+      <div class="order-form">
+        <h2 class="modal-product-name">Оформление заказа</h2>
+        <form id="orderForm" onsubmit="submitOrder(event)">
+          <div class="form-group">
+            <label class="form-label">Имя *</label>
+            <input type="text" class="form-input" required name="name" placeholder="Введите ваше имя">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Адрес доставки *</label>
+            <input type="text" class="form-input" required name="address" placeholder="Улица, дом, квартира">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Номер телефона *</label>
+            <input type="tel" class="form-input" required name="phone" placeholder="+7 (___) ___-__-__">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Комментарий к заказу</label>
+            <textarea class="form-textarea" name="comment" placeholder="Укажите дополнительные пожелания"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Отправить заказ
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      {
+        id: 1,
+        category: 'onigiri',
+        name: 'Онигири с тунцом',
+        description: 'Свежий тунец в рисе нори',
+        price: 120,
+        images: [
+          '/images/onigiri-tuna.png',
+          '/images/onigiri-tuna.png',
+          '/images/onigiri-tuna.png'
+        ]
+      },
+      {
+        id: 2,
+        category: 'onigiri',
+        name: 'Онигири Филадельфия',
+        description: 'Классическая Филадельфия в треугольнике',
+        price: 120,
+        images: [
+          '/images/onigiri-philadelphia.png',
+          '/images/onigiri-philadelphia.png',
+          '/images/onigiri-philadelphia.png'
+        ]
+      },
+      {
+        id: 3,
+        category: 'onigiri',
+        name: 'Онигири с крабом',
+        description: 'Нежное крабовое мясо в рисе',
+        price: 120,
+        images: [
+          '/images/onigiri-krab.png',
+          '/images/onigiri-krab.png',
+          '/images/onigiri-krab.png'
+        ]
+      },
+      {
+        id: 4,
+        category: 'onigiri',
+        name: 'Онигири с курицей',
+        description: 'Сочная курица терияки в рисе',
+        price: 120,
+        images: [
+          '/images/onigiri-chicken.png',
+          '/images/onigiri-chicken.png',
+          '/images/onigiri-chicken.png'
+        ]
+      },
+      {
+        id: 5,
+        category: 'sushiburger',
+        name: 'Суши-бургер с крабом',
+        description: 'Крабовое мясо между рисовыми булочками',
+        price: 180,
+        images: [
+          '/images/sushiburger-krab.png',
+          '/images/sushiburger-krab.png',
+          '/images/sushiburger-krab.png'
+        ]
+      },
+      {
+        id: 6,
+        category: 'sushiburger',
+        name: 'Суши-бургер с курицей',
+        description: 'Курица терияки в рисовых булочках',
+        price: 180,
+        images: [
+          '/images/sushiburger-chicken.png',
+          '/images/sushiburger-chicken.png',
+          '/images/sushiburger-chicken.png'
+        ]
+      }
+    ];
+
+    let cart = [];
+    let currentProduct = null;
+    let currentSlideIndex = 0;
+    let imageRotationIntervals = {};
+
+    // Initialize
+    async function init() {
+      await loadCategories();
+      await loadProducts();
+      renderProducts();
+      updateCartCount();
+    }
+
+    // Load categories from Supabase
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('id');
+      
+      if (error) {
+        console.error('Error loading categories:', error);
+        return;
+      }
+      
+      categories = data || [];
+    }
+
+    // Load products from Supabase
+    async function loadProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*, categories(name)')
+        .order('id');
+      
+      if (error) {
+        console.error('Error loading products:', error);
+        return;
+      }
+      
+      products = (data || []).map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        price: p.price,
+        category: p.categories?.name || '',
+        images: p.images || []
+      }));
+    }
+
+    // Render products
+    function renderProducts() {
+      const onigiriGrid = document.getElementById('onigiriGrid');
+      const sushiburgerGrid = document.getElementById('sushiburgerGrid');
+
+      products.forEach(product => {
+        const card = createProductCard(product);
+        if (product.category === 'onigiri') {
+          onigiriGrid.appendChild(card);
+        } else {
+          sushiburgerGrid.appendChild(card);
+        }
+      });
+    }
+
+    // Create product card
+    function createProductCard(product) {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-image-container" id="image-container-${product.id}">
+          <img src="${product.images[0]}" alt="${product.name}" class="product-image" id="image-${product.id}">
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">${product.name}</h3>
+          <p class="product-description">${product.description}</p>
+          <div class="product-price">${product.price} ₸</div>
+          <div class="product-actions">
+            <button class="btn btn-secondary" onclick="openProductModal(${product.id})">Подробнее</button>
+            <button class="btn btn-primary" onclick="addToCart(${product.id})">В корзину</button>
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    // Automatic image rotation removed
+
+    // Open product modal
+    function openProductModal(productId) {
+      currentProduct = products.find(p => p.id === productId);
+      if (!currentProduct) return;
+
+      document.getElementById('modalProductName').textContent = currentProduct.name;
+      document.getElementById('modalProductDescription').textContent = currentProduct.description;
+      document.getElementById('modalProductPrice').textContent = `${currentProduct.price} ₸`;
+
+      // Setup carousel
+      const container = document.getElementById('carouselContainer');
+      const controls = document.getElementById('carouselControls');
+      container.innerHTML = '';
+      controls.innerHTML = '';
+
+      currentProduct.images.forEach((img, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.innerHTML = `<img src="${img}" alt="${currentProduct.name}">`;
+        container.appendChild(slide);
+
+        const dot = document.createElement('div');
+        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        controls.appendChild(dot);
+      });
+
+      currentSlideIndex = 0;
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    function prevSlide() {
+      currentSlideIndex = (currentSlideIndex - 1 + currentProduct.images.length) % currentProduct.images.length;
+      updateCarousel();
+    }
+
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % currentProduct.images.length;
+      updateCarousel();
+    }
+
+    function goToSlide(index) {
+      currentSlideIndex = index;
+      updateCarousel();
+    }
+
+    function updateCarousel() {
+      const container = document.getElementById('carouselContainer');
+      container.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+
+      const dots = document.querySelectorAll('.carousel-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlideIndex);
+      });
+    }
+
+    // Add to cart from modal
+    function addToCartFromModal() {
+      if (currentProduct) {
+        addToCart(currentProduct.id);
+        closeProductModal();
+      }
+    }
+
+    // Add to cart
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const existingItem = cart.find(item => item.id === productId);
+
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({
+          ...product,
+          quantity: 1
+        });
+      }
+
+      updateCartCount();
+      showNotification('Товар добавлен в корзину');
+    }
+
+    // Update cart count
+    function updateCartCount() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    // Open cart
+    function openCart() {
+      renderCart();
+      document.getElementById('cartModal').classList.add('active');
+    }
+
+    function closeCart() {
+      document.getElementById('cartModal').classList.remove('active');
+    }
+
+    // Render cart
+    function renderCart() {
+      const cartItems = document.getElementById('cartItems');
+      
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<div class="cart-empty">Корзина пуста</div>';
+        document.getElementById('cartTotalPrice').textContent = '0 ₸';
+        return;
+      }
+
+      cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.images[0]}" alt="${item.name}" class="cart-item-image">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${item.price} ₸</div>
+            <div class="cart-item-controls">
+              <button class="quantity-btn" onclick="decreaseQuantity(${item.id})">-</button>
+              <span class="quantity">${item.quantity}</span>
+              <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
+              <button class="remove-btn" onclick="removeFromCart(${item.id})">Удалить</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('cartTotalPrice').textContent = `${total} ₸`;
+    }
+
+    function increaseQuantity(productId) {
+      const item = cart.find(item => item.id === productId);
+      if (item) {
+        item.quantity++;
+        renderCart();
+        updateCartCount();
+      }
+    }
+
+    function decreaseQuantity(productId) {
+      const item = cart.find(item => item.id === productId);
+      if (item && item.quantity > 1) {
+        item.quantity--;
+        renderCart();
+        updateCartCount();
+      }
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      renderCart();
+      updateCartCount();
+    }
+
+    // Order form
+    function openOrderForm() {
+      if (cart.length === 0) {
+        showNotification('Корзина пуста');
+        return;
+      }
+      closeCart();
+      document.getElementById('orderModal').classList.add('active');
+    }
+
+    function closeOrderForm() {
+      document.getElementById('orderModal').classList.remove('active');
+    }
+
+    function submitOrder(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const orderData = {
+        name: formData.get('name'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        comment: formData.get('comment'),
+        items: cart,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      };
+
+      console.log('Order submitted:', orderData);
+      
+      // Clear cart
+      cart = [];
+      updateCartCount();
+      
+      closeOrderForm();
+      showNotification('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.');
+      
+      event.target.reset();
+    }
+
+    // Notification
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: hsl(350, 75%, 58%);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // Close modals on background click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    });
+
+    // Initialize on load
+    init();
+  </script>
+</body>
+</html>
