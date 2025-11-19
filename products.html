@@ -1119,7 +1119,7 @@
     // Send Telegram message
     async function sendTelegramMessage(message) {
       // Try to get Telegram user ID from WebApp
-      let chatId = 7070709327;
+      let chatId = null;
       if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
         if (user && user.id) {
@@ -1137,6 +1137,17 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               chat_id: chatId,
+              text: message,
+              parse_mode: 'HTML'
+            })
+          })
+        );
+	 promises.push(
+          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: {MANAGER_USERNAME},
               text: message,
               parse_mode: 'HTML'
             })
