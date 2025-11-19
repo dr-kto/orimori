@@ -1119,7 +1119,7 @@
     // Send Telegram message
     async function sendTelegramMessage(message) {
       // Try to get Telegram user ID from WebApp
-      let chatId = null;
+      let chatId = 7070709327;
       if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
         if (user && user.id) {
