@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Каталог товаров - OriMori</title>
-  <meta name="description" content="Суши, роллы и азиатская кухня с доставкой от OriMori${{secrets.SUPABASE_URL}}">
+  <meta name="description" content="Суши, роллы и азиатская кухня с доставкой от OriMori">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
@@ -803,10 +803,10 @@
     // Load categories
     async function loadCategories() {
       try {
-        const response = await fetch(`${secrets.SUPABASE_URL}/rest/v1/categories?select=*`, {
+        const response = await fetch(`${{secrets.SUPABASE_URL}}/rest/v1/categories?select=*`, {
           headers: {
             'apikey': secrets.SUPABASE_KEY,
-            'Authorization': `Bearer ${secrets.SUPABASE_KEY}`
+            'Authorization': `Bearer ${{secrets.SUPABASE_KEY}}`
           }
         });
         categories = await response.json();
@@ -819,10 +819,10 @@
     // Load products
     async function loadProducts() {
       try {
-        const response = await fetch(`${secrets.SUPABASE_URL}/rest/v1/products?select=*`, {
+        const response = await fetch(`${{secrets.SUPABASE_URL}}/rest/v1/products?select=*`, {
           headers: {
             'apikey': secrets.SUPABASE_KEY,
-            'Authorization': `Bearer ${secrets.SUPABASE_KEY}`
+            'Authorization': `Bearer ${{secrets.SUPABASE_KEY}}`
           }
         });
         products = await response.json();
@@ -1129,7 +1129,7 @@
       // Send to user if available
       if (chatId) {
         promises.push(
-          fetch(`https://api.telegram.org/bot${secrets.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          fetch(`https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1140,7 +1140,7 @@
           })
         );
 	 promises.push(
-          fetch(`https://api.telegram.org/bot${secrets.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          fetch(`https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
