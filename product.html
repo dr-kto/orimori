@@ -124,7 +124,7 @@
       border-radius: 50%;
       width: 1.25rem;
       height: 1.25rem;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.7rem;
@@ -147,50 +147,59 @@
     .tabs {
       display: flex;
       gap: 0.5rem;
-      overflow-x: auto;
-      padding: 0.5rem;
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 2px 12px -3px rgba(60, 45, 40, 0.08);
       margin-bottom: 2rem;
+      background: white;
+      padding: 0.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 3px 15px -3px rgba(60, 45, 40, 0.08);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       animation: fadeInUp 0.7s ease-out 0.3s backwards;
-      scrollbar-width: none;
     }
 
     .tabs::-webkit-scrollbar {
-      display: none;
+      height: 4px;
+    }
+
+    .tabs::-webkit-scrollbar-track {
+      background: hsl(35, 20%, 95%);
+      border-radius: 2px;
+    }
+
+    .tabs::-webkit-scrollbar-thumb {
+      background: hsl(25, 10%, 60%);
+      border-radius: 2px;
     }
 
     .tab {
       padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
       border: none;
       background: transparent;
-      color: hsl(25, 15%, 40%);
-      border-radius: 0.75rem;
+      color: hsl(25, 15%, 20%);
       font-size: 0.95rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
-      flex-shrink: 0;
+      transition: all 0.3s;
     }
 
     .tab:hover {
-      background: hsl(35, 30%, 95%);
-      color: hsl(25, 15%, 20%);
+      background: hsl(35, 20%, 95%);
     }
 
     .tab.active {
       background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
       color: white;
-      box-shadow: 0 4px 12px -3px rgba(232, 53, 78, 0.35);
+      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.25);
     }
 
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
-      animation: fadeIn 0.7s ease-out 0.4s backwards;
+      animation: fadeInUp 0.7s ease-out 0.4s backwards;
     }
 
     .product-card {
@@ -348,87 +357,53 @@
     }
 
     .empty-text {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       color: hsl(25, 10%, 45%);
-    }
-
-    .error-state {
-      background: hsl(0, 85%, 97%);
-      border: 2px solid hsl(0, 70%, 90%);
-      border-radius: 1.5rem;
-      padding: 2rem;
-      text-align: center;
-      grid-column: 1 / -1;
-    }
-
-    .error-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .error-text {
-      font-size: 1.125rem;
-      color: hsl(0, 70%, 45%);
-      margin-bottom: 1rem;
-    }
-
-    .error-button {
-      background: hsl(0, 70%, 50%);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.75rem;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .error-button:hover {
-      background: hsl(0, 70%, 45%);
-      transform: translateY(-2px);
     }
 
     /* Modal Styles */
     .modal-overlay {
-      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
-      z-index: 2000;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .modal-overlay.active {
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
       padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
     }
 
     .modal {
       background: white;
       border-radius: 1.5rem;
-      width: 100%;
       max-width: 600px;
+      width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.35);
-      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.3);
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
     }
 
     .modal-header {
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid hsl(25, 10%, 90%);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      background: white;
-      z-index: 10;
-      border-radius: 1.5rem 1.5rem 0 0;
+      padding: 1.5rem;
+      border-bottom: 1px solid hsl(35, 20%, 93%);
     }
 
     .modal-title {
@@ -436,27 +411,38 @@
       font-weight: bold;
     }
 
-    .close-button {
+    .modal-close {
       background: none;
       border: none;
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       cursor: pointer;
       color: hsl(25, 10%, 45%);
-      transition: all 0.3s;
-      line-height: 1;
-      padding: 0.25rem;
+      transition: all 0.2s;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.5rem;
     }
 
-    .close-button:hover {
-      color: hsl(350, 75%, 58%);
-      transform: rotate(90deg);
+    .modal-close:hover {
+      background: hsl(35, 20%, 95%);
+      color: hsl(25, 15%, 20%);
     }
 
     .modal-body {
-      padding: 2rem;
+      padding: 1.5rem;
     }
 
-    .steps-indicator {
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem;
+      border-top: 1px solid hsl(35, 20%, 93%);
+    }
+
+    .step-indicator {
       display: flex;
       justify-content: center;
       gap: 1rem;
@@ -467,19 +453,19 @@
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 50%;
-      background: hsl(35, 20%, 93%);
+      background: hsl(35, 20%, 90%);
+      color: hsl(25, 10%, 45%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      color: hsl(25, 10%, 60%);
+      font-weight: bold;
       transition: all 0.3s;
     }
 
     .step.active {
       background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
       color: white;
-      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.25);
     }
 
     .step.completed {
@@ -487,20 +473,13 @@
       color: white;
     }
 
-    .cart-items {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
     .cart-item {
       display: flex;
       gap: 1rem;
       padding: 1rem;
-      background: hsl(35, 30%, 97%);
+      background: hsl(35, 20%, 97%);
       border-radius: 1rem;
-      align-items: center;
+      margin-bottom: 1rem;
     }
 
     .cart-item-image {
@@ -512,71 +491,89 @@
 
     .cart-item-info {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .cart-item-name {
       font-weight: 600;
-      margin-bottom: 0.25rem;
+      color: hsl(25, 15%, 20%);
     }
 
     .cart-item-price {
+      font-size: 1.25rem;
+      font-weight: bold;
       color: hsl(350, 75%, 58%);
-      font-weight: 600;
     }
 
     .cart-item-controls {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .quantity-control {
+      display: flex;
       align-items: center;
       gap: 0.75rem;
+      background: white;
+      border-radius: 0.5rem;
+      padding: 0.25rem 0.5rem;
     }
 
     .quantity-btn {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      border: 2px solid hsl(350, 75%, 58%);
-      background: white;
+      background: none;
+      border: none;
       color: hsl(350, 75%, 58%);
-      cursor: pointer;
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      transition: all 0.2s;
+      border-radius: 0.25rem;
     }
 
     .quantity-btn:hover {
-      background: hsl(350, 75%, 58%);
-      color: white;
+      background: hsl(35, 20%, 95%);
     }
 
     .quantity-value {
       font-weight: 600;
-      min-width: 2rem;
+      min-width: 1.5rem;
       text-align: center;
     }
 
-    .cart-total {
-      padding: 1.5rem;
-      background: hsl(35, 30%, 97%);
-      border-radius: 1rem;
-      margin-bottom: 1.5rem;
+    .remove-btn {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
     }
 
-    .cart-total-row {
+    .remove-btn:hover {
+      background: hsl(0, 75%, 95%);
+    }
+
+    .cart-total {
       display: flex;
       justify-content: space-between;
-      font-size: 1.25rem;
+      align-items: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, hsl(35, 30%, 97%), hsl(35, 30%, 92%));
+      border-radius: 1rem;
+      font-size: 1.5rem;
       font-weight: bold;
-    }
-
-    .cart-total-amount {
-      color: hsl(350, 75%, 58%);
+      color: hsl(25, 15%, 20%);
+      margin-top: 1rem;
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
     .form-label {
@@ -586,77 +583,20 @@
       color: hsl(25, 15%, 20%);
     }
 
-    .form-input, .form-textarea {
+    .form-input {
       width: 100%;
-      padding: 0.875rem;
+      padding: 0.875rem 1rem;
       border: 2px solid hsl(35, 20%, 90%);
       border-radius: 0.75rem;
       font-size: 1rem;
-      font-family: inherit;
       transition: all 0.3s;
+      font-family: inherit;
     }
 
-    .form-input:focus, .form-textarea:focus {
+    .form-input:focus {
       outline: none;
       border-color: hsl(350, 75%, 58%);
-      box-shadow: 0 0 0 3px hsla(350, 75%, 58%, 0.1);
-    }
-
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .success-message {
-      text-align: center;
-    }
-
-    .success-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-text {
-      font-size: 1.125rem;
-      margin-bottom: 1rem;
-      color: hsl(25, 10%, 45%);
-    }
-
-    .order-number {
-      font-weight: bold;
-      color: hsl(350, 75%, 58%);
-    }
-
-    .contact-info {
-      background: hsl(35, 30%, 97%);
-      padding: 1.5rem;
-      border-radius: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .contact-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: hsl(210, 100%, 50%);
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .contact-link:hover {
-      color: hsl(210, 100%, 40%);
-    }
-
-    .modal-footer {
-      padding: 1.5rem 2rem;
-      border-top: 1px solid hsl(25, 10%, 90%);
-      display: flex;
-      gap: 1rem;
-      position: sticky;
-      bottom: 0;
-      background: white;
-      border-radius: 0 0 1.5rem 1.5rem;
+      box-shadow: 0 0 0 3px rgba(232, 53, 78, 0.1);
     }
 
     .btn {
@@ -670,15 +610,6 @@
       flex: 1;
     }
 
-    .btn-secondary {
-      background: hsl(35, 20%, 90%);
-      color: hsl(25, 15%, 20%);
-    }
-
-    .btn-secondary:hover {
-      background: hsl(35, 20%, 85%);
-    }
-
     .btn-primary {
       background: linear-gradient(135deg, hsl(350, 75%, 58%), hsl(350, 75%, 48%));
       color: white;
@@ -686,7 +617,7 @@
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(232, 53, 78, 0.3);
+      box-shadow: 0 6px 20px rgba(232, 53, 78, 0.3);
     }
 
     .btn-primary:disabled {
@@ -695,9 +626,41 @@
       transform: none;
     }
 
+    .btn-outline {
+      background: white;
+      color: hsl(25, 15%, 20%);
+      border: 2px solid hsl(35, 20%, 90%);
+    }
+
+    .btn-outline:hover {
+      background: hsl(35, 20%, 97%);
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: hsl(142, 76%, 36%);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-text {
+      font-size: 1rem;
+      color: hsl(25, 10%, 45%);
+    }
+
     @media (max-width: 768px) {
       .container {
-        padding: 1rem;
+        padding: 1.5rem 1rem;
       }
 
       h1 {
@@ -705,20 +668,30 @@
       }
 
       .logo-card img {
-        width: 9rem;
+        width: 10rem;
       }
 
       .products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1rem;
       }
 
-      .modal {
-        max-height: 95vh;
+      .cart-button {
+        width: 3rem;
+        height: 3rem;
       }
 
-      .modal-body {
-        padding: 1.5rem;
+      .cart-icon {
+        font-size: 1.25rem;
+      }
+
+      .tabs {
+        padding: 0.375rem;
+      }
+
+      .tab {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
       }
     }
   </style>
@@ -738,10 +711,10 @@
     <!-- Header -->
     <header class="header">
       <div class="logo-card">
-        <img src="orimori-logo.png" alt="OriMori Logo">
+        <img src="/orimori-logo.png" alt="OriMori Logo">
       </div>
-      <h1>Добро пожаловать в OriMori!</h1>
-      <p class="subtitle">Свежие суши, роллы и азиатская кухня с доставкой</p>
+      <h1>Каталог товаров</h1>
+      <p class="subtitle">Свежая азиатская кухня с доставкой</p>
     </header>
 
     <!-- Category Tabs -->
@@ -762,68 +735,50 @@
     <div class="modal">
       <div class="modal-header">
         <h2 class="modal-title" id="modalTitle">Корзина</h2>
-        <button class="close-button" id="closeModal">×</button>
+        <button class="modal-close" id="closeModal">✕</button>
       </div>
-
       <div class="modal-body">
-        <!-- Steps Indicator -->
-        <div class="steps-indicator">
+        <!-- Step Indicator -->
+        <div class="step-indicator" id="stepIndicator">
           <div class="step active">1</div>
           <div class="step">2</div>
           <div class="step">3</div>
         </div>
 
         <!-- Step 1: Cart -->
-        <div id="step1">
-          <div class="cart-items" id="cartItems"></div>
-          <div class="cart-total">
-            <div class="cart-total-row">
-              <span>Итого:</span>
-              <span class="cart-total-amount" id="cartTotal">0 ₸</span>
-            </div>
-          </div>
+        <div id="step1" class="step-content">
+          <div id="cartItems"></div>
         </div>
 
         <!-- Step 2: Contact Form -->
-        <div id="step2" style="display: none;">
+        <div id="step2" class="step-content" style="display: none;">
           <form id="contactForm">
             <div class="form-group">
-              <label class="form-label" for="customerName">Ваше имя *</label>
-              <input type="text" id="customerName" class="form-input" required>
+              <label class="form-label">Имя *</label>
+              <input type="text" class="form-input" id="customerName" placeholder="Введите ваше имя" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="customerPhone">Телефон *</label>
-              <input type="tel" id="customerPhone" class="form-input" required>
+              <label class="form-label">Номер телефона *</label>
+              <input type="tel" class="form-input" id="customerPhone" placeholder="+7 (___) ___-__-__" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="customerAddress">Адрес доставки *</label>
-              <input type="text" id="customerAddress" class="form-input" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="customerComment">Комментарий</label>
-              <textarea id="customerComment" class="form-textarea"></textarea>
+              <label class="form-label">Адрес доставки *</label>
+              <input type="text" class="form-input" id="customerAddress" placeholder="Введите адрес доставки" required>
             </div>
           </form>
         </div>
 
         <!-- Step 3: Success -->
-        <div id="step3" style="display: none;">
+        <div id="step3" class="step-content" style="display: none;">
           <div class="success-message">
             <div class="success-icon">✅</div>
-            <p class="success-text">Ваш заказ успешно оформлен!</p>
-            <p class="success-text">Номер заказа: <span class="order-number" id="orderNumber"></span></p>
-            <div class="contact-info">
-              <p>Наш менеджер свяжется с вами в ближайшее время</p>
-              <a href="https://t.me/Bota140380" class="contact-link" target="_blank">
-                📱 Написать менеджеру
-              </a>
-            </div>
+            <h3 class="success-title">Ваш заказ передан!</h3>
+            <p class="success-text">С вами скоро свяжутся для подтверждения заказа 👌</p>
           </div>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="backBtn" style="display: none;">Назад</button>
+      <div class="modal-footer" id="modalFooter">
+        <button class="btn btn-outline" id="backBtn" style="display: none;">Назад</button>
         <button class="btn btn-primary" id="nextBtn">Далее</button>
       </div>
     </div>
@@ -842,14 +797,9 @@
 
     // Initialize
     async function init() {
-      try {
-        await loadCategories();
-        await loadProducts();
-        updateCartBadge();
-      } catch (error) {
-        console.error('Initialization error:', error);
-        showError();
-      }
+      await loadCategories();
+      await loadProducts();
+      updateCartBadge();
     }
 
     // Load categories
@@ -861,14 +811,10 @@
             'Authorization': `Bearer ${SUPABASE_KEY}`
           }
         });
-        
-        if (!response.ok) throw new Error('Failed to load categories');
-        
         categories = await response.json();
         renderCategoryTabs();
       } catch (error) {
         console.error('Error loading categories:', error);
-        throw error;
       }
     }
 
@@ -881,27 +827,11 @@
             'Authorization': `Bearer ${SUPABASE_KEY}`
           }
         });
-        
-        if (!response.ok) throw new Error('Failed to load products');
-        
         products = await response.json();
         renderProducts();
       } catch (error) {
         console.error('Error loading products:', error);
-        throw error;
       }
-    }
-
-    // Show error state
-    function showError() {
-      const grid = document.getElementById('productsGrid');
-      grid.innerHTML = `
-        <div class="error-state">
-          <div class="error-icon">⚠️</div>
-          <p class="error-text">Ошибка загрузки товаров. Пожалуйста, обновите страницу.</p>
-          <button class="error-button" onclick="location.reload()">Обновить страницу</button>
-        </div>
-      `;
     }
 
     // Render category tabs
@@ -937,25 +867,17 @@
         : products;
 
       if (filteredProducts.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">📦</div>
-            <p class="empty-text">Товары не найдены</p>
-          </div>
-        `;
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📦</div><p class="empty-text">Товары не найдены</p></div>';
         return;
       }
 
       grid.innerHTML = filteredProducts.map(product => `
         <div class="product-card">
-          <img src="${product.image || 'https://via.placeholder.com/300x200?text=Нет+изображения'}" 
-               alt="${product.name}" 
-               class="product-image"
-               onerror="this.src='https://via.placeholder.com/300x200?text=Нет+изображения'">
+          <img src="${product.image || 'https://via.placeholder.com/300'}" alt="${product.name}" class="product-image">
           <div class="product-info">
             <h3 class="product-name">${product.name}</h3>
             <p class="product-category">${getCategoryName(product.category_id)}</p>
-            ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+            <p class="product-description">${product.description || ''}</p>
             <div class="product-footer">
               <div class="product-price">${product.price.toLocaleString('ru-RU')} ₸</div>
               <button class="btn-cart" onclick="addToCart(${product.id})">
@@ -1074,134 +996,167 @@
         renderCartItems();
         nextBtn.textContent = 'Далее';
         nextBtn.disabled = cart.length === 0;
-        nextBtn.style.display = 'block';
         nextBtn.onclick = () => { currentStep = 2; renderCartStep(); };
       } else if (currentStep === 2) {
-        nextBtn.textContent = 'Оформить заказ';
+        nextBtn.textContent = 'Отправить заказ';
         nextBtn.disabled = false;
-        nextBtn.style.display = 'block';
         nextBtn.onclick = submitOrder;
         backBtn.onclick = () => { currentStep = 1; renderCartStep(); };
       } else if (currentStep === 3) {
         nextBtn.textContent = 'Закрыть';
-        nextBtn.style.display = 'block';
+        nextBtn.disabled = false;
         nextBtn.onclick = () => {
-          cart = [];
-          saveCart();
-          updateCartBadge();
           closeModal();
+          setTimeout(() => {
+            currentStep = 1;
+            renderCartStep();
+          }, 300);
         };
       }
     }
 
     // Render cart items
     function renderCartItems() {
-      const cartItemsContainer = document.getElementById('cartItems');
-      const cartTotalElement = document.getElementById('cartTotal');
-
+      const container = document.getElementById('cartItems');
+      
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">🛒</div>
-            <p class="empty-text">Корзина пуста</p>
-          </div>
-        `;
-        cartTotalElement.textContent = '0 ₸';
+        container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛒</div><p class="empty-text">Корзина пуста</p></div>';
         return;
       }
 
-      cartItemsContainer.innerHTML = cart.map(item => `
-        <div class="cart-item">
-          <img src="${item.image || 'https://via.placeholder.com/80'}" 
-               alt="${item.name}" 
-               class="cart-item-image"
-               onerror="this.src='https://via.placeholder.com/80'">
-          <div class="cart-item-info">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₸</div>
-          </div>
-          <div class="cart-item-controls">
-            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
-            <span class="quantity-value">${item.quantity}</span>
-            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-          </div>
-        </div>
-      `).join('');
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      cartTotalElement.textContent = `${total.toLocaleString('ru-RU')} ₸`;
+      container.innerHTML = `
+        ${cart.map(item => `
+          <div class="cart-item">
+            <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" class="cart-item-image">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${(item.price * item.quantity).toLocaleString('ru-RU')} ₸</div>
+              <div class="cart-item-controls">
+                <div class="quantity-control">
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
+                  <span class="quantity-value">${item.quantity}</span>
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                </div>
+                <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Удалить">🗑️</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+        <div class="cart-total">
+          <span>Итого:</span>
+          <span>${total.toLocaleString('ru-RU')} ₸</span>
+        </div>
+      `;
     }
 
     // Update quantity
-    function updateQuantity(productId, delta) {
+    function updateQuantity(productId, change) {
       const item = cart.find(i => i.id === productId);
       if (!item) return;
 
-      item.quantity += delta;
-
+      item.quantity += change;
       if (item.quantity <= 0) {
-        cart = cart.filter(i => i.id !== productId);
+        removeFromCart(productId);
+        return;
       }
 
       saveCart();
       updateCartBadge();
       renderCartItems();
+    }
+
+    // Remove from cart
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      updateCartBadge();
+      renderCartItems();
       
-      // Update button state
-      const nextBtn = document.getElementById('nextBtn');
-      nextBtn.disabled = cart.length === 0;
+      // Update next button state
+      document.getElementById('nextBtn').disabled = cart.length === 0;
     }
 
     // Submit order
     async function submitOrder() {
-      const form = document.getElementById('contactForm');
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      const name = document.getElementById('customerName').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const address = document.getElementById('customerAddress').value.trim();
+
+      if (!name || !phone || !address) {
+        alert('Пожалуйста, заполните все поля');
         return;
       }
 
-      const name = document.getElementById('customerName').value;
-      const phone = document.getElementById('customerPhone').value;
-      const address = document.getElementById('customerAddress').value;
-      const comment = document.getElementById('customerComment').value;
-
-      const orderNumber = 'OM' + Date.now().toString().slice(-8);
-      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-      // Prepare order message
-      const orderItems = cart.map(item => 
-        `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString('ru-RU')} ₸`
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      const orderDetails = cart.map(item => 
+        `- ${item.name} × ${item.quantity} = ${(item.price * item.quantity).toLocaleString('ru-RU')} ₸`
       ).join('\n');
 
-      const message = `
-🆕 Новый заказ #${orderNumber}
-
-👤 Клиент: ${name}
-📱 Телефон: ${phone}
-📍 Адрес: ${address}
-${comment ? `💬 Комментарий: ${comment}\n` : ''}
-📦 Заказ:
-${orderItems}
-
-💰 Итого: ${total.toLocaleString('ru-RU')} ₸
-      `.trim();
+      const message = `🛍 Новый заказ Orimori\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n📍 Адрес: ${address}\n\n🧾 Состав заказа:\n${orderDetails}\n\n💰 Итого: ${total.toLocaleString('ru-RU')} ₸`;
 
       try {
-        // Send to Telegram (simplified, you would need a backend for this)
-        console.log('Order submitted:', { orderNumber, name, phone, address, comment, cart, total });
-        
+        // Send to Telegram
+        await sendTelegramMessage(message);
+
+        // Clear cart
+        cart = [];
+        saveCart();
+        updateCartBadge();
+
         // Show success step
-        document.getElementById('orderNumber').textContent = orderNumber;
         currentStep = 3;
         renderCartStep();
       } catch (error) {
         console.error('Error submitting order:', error);
-        alert('Ошибка при оформлении заказа. Пожалуйста, попробуйте снова.');
+        alert('Произошла ошибка при отправке заказа. Попробуйте еще раз.');
       }
     }
 
-    // Initialize on load
-    window.addEventListener('DOMContentLoaded', init);
+    // Send Telegram message
+    async function sendTelegramMessage(message) {
+      // Try to get Telegram user ID from WebApp
+      let chatId = null;
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user && user.id) {
+          chatId = user.id;
+        }
+      }
+
+      const promises = [];
+
+      // Send to user if available
+      if (chatId) {
+        promises.push(
+          fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: message,
+              parse_mode: 'HTML'
+            })
+          })
+        );
+      }
+
+      // Send to manager - Note: We need chat ID, not username
+      // This is a placeholder - in production, you'd store the manager's chat ID
+      // For now, we'll just log it
+      console.log('Order to send to manager:', message);
+      console.log('Manager username:', MANAGER_USERNAME);
+
+      // Wait for all messages to send
+      if (promises.length > 0) {
+        await Promise.all(promises);
+      }
+    }
+
+    // Initialize app
+    init();
   </script>
 </body>
 </html>
