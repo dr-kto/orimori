@@ -1144,11 +1144,6 @@
         );
       }
 
-      // Send to manager - Note: We need chat ID, not username
-      // This is a placeholder - in production, you'd store the manager's chat ID
-      // For now, we'll just log it
-      console.log('Order to send to manager:', message);
-      console.log('Manager username:', MANAGER_USERNAME);
 
       // Wait for all messages to send
       if (promises.length > 0) {
