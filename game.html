@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Orimori - Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Utilities */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .rice-pattern {
+            position: fixed; inset: 0; opacity: 0.05; pointer-events: none; z-index: -1;
+            background-image: radial-gradient(circle at 20% 30%, #3f3f46 1px, transparent 1px),
+                              radial-gradient(circle at 60% 70%, #3f3f46 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide-up { animation: slide-up 0.3s ease-out forwards; }
+        
+        /* Typing animation */
+        .typing-dot { animation: bounce 1s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    </style>
+    <!-- Import Map for Gemini -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.run/@google/genai"
+        }
+      }
+    </script>
+</head>
+<body class="bg-[#faf8f5] text-gray-800 antialiased flex flex-col h-screen overflow-hidden">
+    <div class="rice-pattern"></div>
+
+    <!-- HUD (Heads Up Display) -->
+    <div class="bg-white border-b border-gray-200 p-3 flex justify-between items-center shadow-sm z-10">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-sm">
+                <img src="https://picsum.photos/200" alt="User" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xs font-bold text-gray-800" id="hud-name">Rice Ball</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-red-500">Lvl <span id="hud-level">1</span></span>
+                    <div class="w-12 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-red-500 w-1/2 transition-all duration-500" id="hud-xp-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <a href="discover.html" class="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-bold rounded-lg hover:bg-gray-200">
+                Exit
+            </a>
+            <button class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center text-lg border border-orange-100">
+                🎒
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 pb-32 no-scrollbar bg-[#faf8f5]">
+        <!-- Messages will be injected here -->
+    </div>
+
+    <!-- Controls Area -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#faf8f5] via-[#faf8f5] to-transparent z-20">
+        <div id="choices-container" class="flex flex-col gap-2 max-w-lg mx-auto">
+            <!-- Buttons will be injected here -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
+
+        // --- CONFIGURATION ---
+        const API_KEY = "AIzaSyD6yhG_Pwr6h93KrVcfulz_t-1NLOl8k5Y"; // Key provided by user
+        const ai = new GoogleGenAI({ apiKey: API_KEY });
+        const MODEL_NAME = "gemini-2.5-flash";
+
+        const SYSTEM_PROMPT = `
+        You are Orimori, the kind, warm, and slightly ironic spirit guide of the Kitchen World.
+        You narrate the adventures of a sentient Rice Ball (the user).
+        Speak in short, punchy sentences. Use italics for internal thoughts. Use exclamation marks for alarm!
+        
+        Current Context:
+        - World: Anthropomorphic food world.
+        - Magic: "Flavor". Loss of flavor is death.
+        
+        Output Format: JSON ONLY.
+        Structure:
+        {
+          "text": "Narrative description here...",
+          "choices": [
+            { "id": "1", "text": "Action 1" },
+            { "id": "2", "text": "Action 2" }
+          ],
+          "xp_gain": 0 (integer, optional)
+        }
+        `;
+
+        // --- GAME STATE ---
+        const state = {
+            level: 1,
+            xp: 0,
+            history: [], // Summary of last few turns
+            isTyping: false
+        };
+
+        // --- UI FUNCTIONS ---
+
+        const chatContainer = document.getElementById('chat-container');
+        const choicesContainer = document.getElementById('choices-container');
+        const hudLevel = document.getElementById('hud-level');
+        const hudXpBar = document.getElementById('hud-xp-bar');
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addMessage(sender, text) {
+            const div = document.createElement('div');
+            const isUser = sender === 'user';
+            
+            div.className = `flex ${isUser ? 'justify-end' : 'justify-start'} animate-slide-up`;
+            
+            let avatarHtml = '';
+            if (!isUser) {
+                avatarHtml = `
+                <div class="w-8 h-8 rounded-full bg-red-100 flex-shrink-0 mr-2 flex items-center justify-center text-lg border-2 border-white shadow-sm">
+                    🍥
+                </div>`;
+            }
+
+            div.innerHTML = `
+                ${avatarHtml}
+                <div class="max-w-[85%] p-3.5 text-sm leading-relaxed shadow-sm ${
+                    isUser 
+                    ? 'bg-gray-800 text-white rounded-2xl rounded-tr-sm' 
+                    : 'bg-white text-gray-800 rounded-2xl rounded-tl-sm border border-gray-100'
+                }">
+                    ${text}
+                </div>
+            `;
+            
+            chatContainer.appendChild(div);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'flex justify-start animate-pulse';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-red-100 flex-shrink-0 mr-2 flex items-center justify-center text-lg border-2 border-white shadow-sm">
+                    🍥
+                </div>
+                <div class="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm border border-gray-100 flex gap-1">
+                    <div class="w-2 h-2 bg-gray-300 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-gray-300 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-gray-300 rounded-full typing-dot"></div>
+                </div>
+            `;
+            chatContainer.appendChild(div);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const el = document.getElementById('typing-indicator');
+            if (el) el.remove();
+        }
+
+        function renderChoices(choices) {
+            choicesContainer.innerHTML = '';
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "w-full bg-white border-b-4 border-gray-200 active:border-b-0 active:translate-y-1 py-3.5 px-4 rounded-xl text-sm font-bold text-gray-700 shadow-sm text-left hover:bg-gray-50 transition-all flex items-center justify-between group";
+                btn.innerHTML = `
+                    ${choice.text}
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity text-red-400">👉</span>
+                `;
+                btn.onclick = () => handleUserChoice(choice.text);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function updateHUD() {
+            hudLevel.innerText = state.level;
+            // Simple visual XP bar logic (0 to 100 for demo)
+            const visualPercent = Math.min((state.xp % 100), 100); 
+            hudXpBar.style.width = `${visualPercent}%`;
+        }
+
+        // --- GAME LOGIC ---
+
+        async function generateNextNode(lastAction, contextHistory) {
+            showTypingIndicator();
+            state.isTyping = true;
+            choicesContainer.innerHTML = ''; // Hide buttons while loading
+
+            try {
+                const prompt = `
+                    Context History: ${contextHistory.slice(-3).join(" | ")}
+                    User Action: "${lastAction}"
+                    
+                    Generate the next short story segment and 2-3 choices in JSON format.
+                `;
+
+                const response = await ai.models.generateContent({
+                    model: MODEL_NAME,
+                    contents: prompt,
+                    config: {
+                        responseMimeType: "application/json",
+                        systemInstruction: SYSTEM_PROMPT,
+                    }
+                });
+
+                const result = JSON.parse(response.text());
+                
+                removeTypingIndicator();
+                state.isTyping = false;
+
+                // Process XP
+                if (result.xp_gain) {
+                    state.xp += result.xp_gain;
+                    if (state.xp > 100) state.level++; // Simple level up logic
+                    updateHUD();
+                }
+
+                // Render
+                addMessage('orimori', result.text);
+                renderChoices(result.choices || []);
+                
+                // Update History
+                state.history.push(`Orimori: ${result.text}`);
+
+            } catch (error) {
+                console.error(error);
+                removeTypingIndicator();
+                addMessage('system', 'The connection to the Flavor Spirit is weak... (API Error). Retrying...');
+                
+                // Retry button
+                renderChoices([{ text: "Retry Connection" }]);
+            }
+        }
+
+        async function handleUserChoice(text) {
+            if (state.isTyping) return;
+            
+            addMessage('user', text);
+            state.history.push(`User: ${text}`);
+            
+            await generateNextNode(text, state.history);
+        }
+
+        // --- INIT ---
+        function initGame() {
+            updateHUD();
+            // Initial Prompt
+            generateNextNode("Start Game", ["Player has entered the kitchen."]);
+        }
+
+        // Start
+        initGame();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Orimori - Discover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        
+        .rice-pattern {
+            position: fixed; inset: 0; opacity: 0.05; pointer-events: none; z-index: -1;
+            background-image: radial-gradient(circle at 20% 30%, #3f3f46 1px, transparent 1px),
+                              radial-gradient(circle at 60% 70%, #3f3f46 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#faf8f5] text-gray-800 antialiased">
+    <div class="rice-pattern"></div>
+
+    <div class="max-w-lg mx-auto min-h-screen flex flex-col bg-[#faf8f5]/90 shadow-2xl">
+        
+        <!-- Header -->
+        <div class="p-6 bg-white border-b border-gray-100 flex justify-between items-center sticky top-0 z-20">
+            <div>
+                <h1 class="text-2xl font-black tracking-tight">Discover</h1>
+                <p class="text-gray-400 text-xs">New adventures await</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="game.html" class="bg-gray-100 text-gray-600 px-3 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">Play Game</a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-4 space-y-6 flex-1 animate-fade-in" id="dlc-container">
+            <!-- DLCs will be injected here by JS -->
+        </div>
+
+        <!-- Bottom Nav (Static visual) -->
+        <nav class="bg-white border-t border-gray-200 p-2 flex justify-around sticky bottom-0 z-50">
+            <a href="#" class="flex flex-col items-center p-2 text-gray-400 hover:text-red-500">
+                <span class="text-2xl">🏠</span>
+                <span class="text-[10px] font-bold uppercase">Home</span>
+            </a>
+            <a href="game.html" class="flex flex-col items-center p-2 text-gray-400 hover:text-red-500">
+                <span class="text-2xl">🎮</span>
+                <span class="text-[10px] font-bold uppercase">Play</span>
+            </a>
+            <div class="flex flex-col items-center p-2 text-red-500 scale-105">
+                <span class="text-2xl">🗺️</span>
+                <span class="text-[10px] font-bold uppercase">Discover</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Mock Data
+        const DLC_DATA = [
+            {
+                id: 'dlc_origin',
+                title: 'How to Become Big',
+                description: 'The journey of a small rice grain who tired of being a simple roll and decided to become an Onigiri legend.',
+                price: 0,
+                imageUrl: 'https://picsum.photos/seed/onigiri/300/200',
+                isFree: true
+            },
+            {
+                id: 'dlc_chicken',
+                title: 'Attack on Chicken',
+                description: 'Defend Paradise Island from the colossal 3-story tall Fury Chicken.',
+                price: 500,
+                imageUrl: 'https://picsum.photos/seed/chicken/300/200',
+                isFree: false
+            },
+            {
+                id: 'dlc_wasabi',
+                title: 'My Friend Wasabi',
+                description: 'A touching story about a toxic friend who sacrificed everything to save the flavor.',
+                price: 300,
+                imageUrl: 'https://picsum.photos/seed/wasabi/300/200',
+                isFree: false
+            }
+        ];
+
+        // State management
+        const getPurchasedDLCs = () => JSON.parse(localStorage.getItem('orimori_purchased_dlcs') || '["dlc_origin"]');
+        const savePurchasedDLC = (id) => {
+            const list = getPurchasedDLCs();
+            if (!list.includes(id)) {
+                list.push(id);
+                localStorage.setItem('orimori_purchased_dlcs', JSON.stringify(list));
+            }
+        };
+
+        // Render Function
+        function renderDLCs() {
+            const container = document.getElementById('dlc-container');
+            const purchased = getPurchasedDLCs();
+
+            container.innerHTML = DLC_DATA.map(dlc => {
+                const isOwned = purchased.includes(dlc.id);
+                
+                return `
+                <div class="group bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+                    <div class="h-40 bg-gray-200 relative overflow-hidden">
+                        <img src="${dlc.imageUrl}" alt="${dlc.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                            ${isOwned ? '<span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md mb-1">OWNED</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">${dlc.title}</h2>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2">
+                            ${dlc.description}
+                        </p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="text-orange-500 font-bold flex items-center gap-1">
+                                <span>🪙</span>
+                                ${dlc.isFree ? 'FREE' : dlc.price}
+                            </div>
+                            <button 
+                                onclick="handleBuy('${dlc.id}')"
+                                class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 ${
+                                    isOwned 
+                                    ? 'bg-gray-100 text-gray-400 cursor-default'
+                                    : 'bg-red-500 text-white shadow-lg shadow-red-200 hover:bg-red-600'
+                                }"
+                                ${isOwned ? 'disabled' : ''}
+                            >
+                                ${isOwned ? 'Installed' : 'Get Now'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            // Add Teaser
+            container.innerHTML += `
+                <div class="mt-4 p-6 bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="font-bold text-lg mb-2">Manga Library</h3>
+                        <p class="text-gray-400 text-sm mb-4">Read the backstory of T-Rex Chicken and more.</p>
+                        <span class="inline-block bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1 rounded-lg text-xs">Coming Soon</span>
+                    </div>
+                    <div class="absolute right-[-20px] bottom-[-20px] text-9xl opacity-10 select-none">📖</div>
+                </div>
+            `;
+        }
+
+        // Interaction Handler
+        window.handleBuy = (id) => {
+            const dlc = DLC_DATA.find(d => d.id === id);
+            if(!dlc) return;
+
+            // Simulation of purchase logic
+            if (confirm(`Purchase "${dlc.title}"?`)) {
+                savePurchasedDLC(id);
+                renderDLCs(); // Re-render to update button state
+            }
+        }
+
+        // Init
+        renderDLCs();
+    </script>
+</body>
+</html>
